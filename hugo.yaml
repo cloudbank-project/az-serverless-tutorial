@@ -1,0 +1,17 @@
+baseURL: https://cloudbank-project.github.io/serverless-az
+languageCode: en-us
+title: Serverless Cloud Computing on Azure
+theme: "tutelage"
+
+params:
+  lineNoMinThreshold: 4
+markup:
+  tableOfContents:
+    startLevel: 0
+    # endLevel: 5
+  highlight:
+    lineNos: true
+    anchorLineNos: true
+  goldmark:
+    renderer:
+      unsafe: true
