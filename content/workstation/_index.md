@@ -202,7 +202,39 @@ And finally, after all of the above steps, you'll be able to see all of your rem
 
 At this point, all files you edit in this window, and all terminals you open, will inherently be stored and running on the remote machine (rather than your laptop). Congratulations, you are working in the cloud!
 
-## Turning things off when you're done
+## 6. Play around
+
+In your remote window, open a terminal by using the `Terminal` menu and selecting `New Terminal`:
+
+![](./img/vscode-rc-term.png)
+
+At the bottom of the window, a terminal will open up. We're going to install some software on the remote machine now using the tool `apt`. Run the following command to get `apt` to fetch the list of all the software available for it to download:
+
+```bash
+sudo apt update
+```
+
+![](./img/vscode-rc-term-2.png)
+
+Now we're going to install a very important tool called `nyancat`. To do so, run the following command:
+
+```bash
+sudo apt-get install -y nyancat
+```
+
+Now, you can launch the tool by running the following command:
+
+```bash
+nyancat
+```
+
+If all goes well, you should see this:
+
+![](./img/vscode-rc-nyan.png)
+
+Congratulations! Good job! You're doing science now. You can exit `nyancat` by clicking inside the terminal and typing the key combination `Control + C`. 
+
+## 7. Turning things off when you're done
 
 Although we've set up the machine to automatically power down at the end of the day, it's good practice to manually turn the machine off when you're done using it (the auto-off is really just there in case we forget).
 
@@ -211,7 +243,7 @@ You can power the VM down by going to its dashboard on the Azure web portal and 
 ![](./img/vm-stop.png)
 
 
-# 5. Troubleshooting
+# 8. Troubleshooting
 <a id="perma-troubleshooting"></a>
 
 ## Error "Permission denied (publickey)"
