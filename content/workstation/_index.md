@@ -202,7 +202,7 @@ And finally, after all of the above steps, you'll be able to see all of your rem
 
 At this point, all files you edit in this window, and all terminals you open, will inherently be stored and running on the remote machine (rather than your laptop). Congratulations, you are working in the cloud!
 
-## 6. Play around
+# 5. Play around
 
 In your remote window, open a terminal by using the `Terminal` menu and selecting `New Terminal`:
 
@@ -234,7 +234,7 @@ If all goes well, you should see this:
 
 Congratulations! Good job! You're doing science now. You can exit `nyancat` by clicking inside the terminal and typing the key combination `Control + C`. 
 
-## 7. Turning things off when you're done
+# 6. Turning things off when you're done
 
 Although we've set up the machine to automatically power down at the end of the day, it's good practice to manually turn the machine off when you're done using it (the auto-off is really just there in case we forget).
 
@@ -243,7 +243,7 @@ You can power the VM down by going to its dashboard on the Azure web portal and 
 ![](./img/vm-stop.png)
 
 
-# 8. Troubleshooting
+# 7. Troubleshooting
 <a id="perma-troubleshooting"></a>
 
 ## Error "Permission denied (publickey)"
