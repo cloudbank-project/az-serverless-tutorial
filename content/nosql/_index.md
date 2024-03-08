@@ -11,7 +11,9 @@ Specifically, we'll be using a NoSQL database (pronounced "no-seek-well") using 
 
 This guide assumes that you've completed the [VM Workstation tutorial](../workstation). If you haven't, go back and skim through it now. Using a remote VM is not required to do any of the things outlined in this tutorial, but it _will_ make it easier for course staff to help you debug things.
 
-# 1. Open the Azure portal
+# 1. Get your environment ready
+
+## Portal
 
 TODO description
 
@@ -19,6 +21,9 @@ TODO description
 🔗 [https://portal.azure.com](https://portal.azure.com)
 {{% /aside %}}
 
+## VSCode
+
+TODO
 
 # 2. Create an empty database
 
