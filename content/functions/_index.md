@@ -107,6 +107,22 @@ should see all these files in the files pane:
 ![](./img/azfn-workspace.png)
 
 
+Now let's create a "venv" ("virtual environment") for the function to execute in. In a terminal, run this command to create a new environment:
+```bash
+python3 -m venv app-env
+```
+
+And now run this command to enter it:
+```bash
+source app-env/bin/activate
+```
+You should see the environment name appear before the regular stuff in the terminal prompt:
+
+![](./img/azfn-venv.png)
+
+In general, you'll only need to create the environment once, but "activate"/**enter it every time you open a new terminal**. If you're not sure, look for that `(app-env)` text before the rest of the command prompt. If you don't see it, run that `activate` command above.
+
+
 ## Looking around
 
 Open `function_app.py`
@@ -223,15 +239,180 @@ If we were to use more advanced tools to open that web URL, we'd find we were ge
 
 But we don't care about that! We just want to allow the world to read our periodic table database. To do so, we have to change our function to allow *anonymous access*.
 
+We can do this by changing the line of code that starts with `@app.route`. Change this:
+
+```python
+@app.route(route="test")
+```
+
+to this:
+
+```python
+@app.route(route="test", auth_level=func.AuthLevel.ANONYMOUS)
+```
+
+Test your function out with `func start`, and then once you confirm it still works, re-publish it with  `func azure functionapp publish ________` (blank replaced appropriately).
 
 
-# 4. Connecting your function to the database
+When the command completes, you should be able to run your code on the cloud by opening the invoke URL provided by the publish command:
+
+![](img/azfn-invoke-url.png)
+
+![](./img/azfn-browser-public-test.png)
+
+Your friends should be able to as well. Ask them to try it out!
+
+
+# 4. Reading from the database
+
+## New code 
+
+Now we'll add another function to our API that allows users to perform element lookups from our NoSQL database.
+
+First, let's open up `requirements.txt`, which lists the packages required for our code to run. Add the following two lines to the bottom, and save the file:
+
+```python
+azure-core==1.26.4
+azure-cosmos==4.3.1
+```
+
+Open a terminal in the `db-api` folder and install these to our workstation VM by running the following command:
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+
+Now return to `function_app.py`. Add this to the top of the file, right after the `import logging` line:
+```python
+import os
+import azure.cosmos.cosmos_client as cosmos_client
+
+try:
+  HOST = os.environ['ACCOUNT_HOST']
+  MASTER_KEY = os.environ['ACCOUNT_KEY']
+except KeyError:
+  logging.error("Get your database's account URL and key and set them in the ACCOUNT_HOST / ACCOUNT_KEY environment variables")
+DATABASE_ID = "periodic-db"
+CONTAINER_ID = "elements"
+```
+
+And at the bottom of the file, let's add the following function:
+
+```python
+
+@app.route(route="lookup", auth_level=func.AuthLevel.ANONYMOUS)
+def lookup(req: func.HttpRequest) -> func.HttpResponse:
+    element = req.params.get('name')
+    if not element:
+        try:
+            req_body = req.get_json()
+        except ValueError:
+            pass
+        else:
+            element = req_body.get('name')
+
+    if element:
+        client = cosmos_client.CosmosClient(HOST, {'masterKey': MASTER_KEY})
+        db = client.get_database_client(DATABASE_ID)
+        container = db.get_container_client(CONTAINER_ID)
+        items = list(container.query_items(
+            query="SELECT * FROM r WHERE r.id=@id",
+            parameters=[
+                {"name": "@id", "value": element}
+            ],
+            enable_cross_partition_query=True
+        ))
+        items_json = json.dumps(items)
+        return func.HttpResponse(
+            items_json,
+            mimetype="application/json",
+            status_code=200
+        )
+    else:
+        return func.HttpResponse(
+             "Provide an element, honey..",
+             status_code=404
+        )
+
+```
+
+But we're still not done. We need to give our code the secret access keys to the database.
+
+## Access credentials 
+
+Open up `local.settings.json`, which should look something like this:
+
+```json
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "AzureWebJobsFeatureFlags": "EnableWorkerIndexing",
+    "AzureWebJobsStorage": ""
+  }
+}
+```
+
+The settings contained between the curly braces in `"Values": {...}` are accessible in the Python code through those `os.environ` lines of code. Noting in our code that we grab the database's URI through a setting named `ACCCOUNT_HOST`, and key through a setting named `ACCOUNT_KEY`, we have to add those here.
+
+Create two lines right after the opening curly brace `{` of "Values" (line 3 in the example above). On those lines, write:
+
+```yaml
+   "ACCOUNT_HOST": "______",
+   "ACCOUNT_KEY": "______",
+```
+
+Now head over to the Azure web portal, and open up the Cosmos DB dashboard using the search box at the top. Select your database from the list:
+
+![](./img/portal-db-find.png)
+
+From there, select `Keys` in the left menu (1). Click the copy button next to the URI box (2) and paste it into `local.settings.json` as the `ACCOUNT_HOST` value, instead of the blank `______`. Click the eye icon to show the database's primary key (3), and then copy that too (4). Paste it into `local.settings.json` as the `ACCOUNT_KEY` value.
+
+![](./img/portal-db-key.png)
+
+Save `local.settings.json`, and then test out your function by running the terminal command `func start`. We should be presented with _two_ URLs now, each corresponding to one of the python functions in `function_app.py`. We want to try the 'lookup' one:
+
+![](./img/azfn-lookup-url.png)
+
+Open that in a web browser:
+
+![](./img/azfn-browser-elem-1.png)
+
+If you see the above, that's a great sign! Now let's look up a specific element. Try adding `?name=Carbon` to the end of the URL. If it works, you should see information like this:
+
+![](./img/azfn-browser-elem-2.png)
+
+That means it works! Hurray! The exact formatting/coloring of the information will likely look different on your computer, but if the information is there, that's what we care about. If you __don't__ see information about carbon in your browser, (a) make sure it's capitalized, (b) look in the VSCode terminal for the red error output. This is the first information needed to debug the problem (which your classmates and course staff can help you with).
+
+## Publishing
+
+Push your code into the cloud with that old command,
+
+```bash
+func azure functionapp publish ________
+```
+
+(replacing the blank `______` appropriately). The process should complete and give us two URLs, but we're not ready to use them yet. We have to add the database URL/access key to the cloud environment, the same way we did in the test environment with `local.settings.json`. In your web browser, go to the function app's dashboard:
+
+![](./img/portal-fn-reopen.png)
+
+Select `Environment variables` from the `Settings` menu on the left:
+
+![](./img/portal-fn-env.png)
+
+On this page, add two new variables named `ACCOUNT_HOST` and `ACCOUNT_KEY`. Give them the values of their respective variables from `local.settings.json`, but _not_ surrounded by double-quotes `"`.
+
+When you're done, hit the blue `Apply` button at the bottom and confirm that you want to restart the app to make changes. _Now_, open the url `https://__________.azurewebsites.net/api/lookup?name=Carbon`, where the blank `_______` is replaced with your app name. You should see similar output to when you tested earlier:
+
+![](./img/azfn-browser-cloud-elem.png)
+
+That means it all works! You've build an API that stores information in a database and retrieves it through a public web API. Congratulations!
 
 {{% aside %}}
 
-
-🏆 **Challenge:**
-- haHA
-- frontend?
+🏆 **Challenges:**
+- Modify the Python code to support _partial_ name lookups (eg, looking up 'nit' will show information for Nitrogen) 
+- Use HTML and Javascript to build a "front-end" for the API
 
 {{% /aside %}}

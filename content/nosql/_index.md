@@ -127,10 +127,10 @@ azure-core==1.26.4
 azure-cosmos==4.3.1
 ```
 
-In terminal, install pip
+In terminal, install pip and venv
 
 ```bash
-sudo apt install -y python3-pip
+sudo apt install -y python3-pip python3-venv
 ```
 
 Now use pip to install pkgs
