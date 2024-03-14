@@ -297,9 +297,21 @@ DATABASE_ID = "periodic-db"
 CONTAINER_ID = "elements"
 ```
 
-And at the bottom of the file, let's add the following function:
+And at the bottom of the file, let's add the following functions:
 
 ```python
+
+def stripPrivateKeys(structure):
+    if hasattr(structure, "keys"):
+        all_keys = list(structure)
+        for key in all_keys:
+            if key.startswith("_"):
+                del structure[key]
+            else:
+                stripPrivateKeys(structure[key])
+    elif hasattr(structure, "__iter__") and not isinstance(structure, str):
+        for elem in structure:
+            stripPrivateKeys(elem)
 
 @app.route(route="lookup", auth_level=func.AuthLevel.ANONYMOUS)
 def lookup(req: func.HttpRequest) -> func.HttpResponse:
@@ -323,6 +335,7 @@ def lookup(req: func.HttpRequest) -> func.HttpResponse:
             ],
             enable_cross_partition_query=True
         ))
+        stripPrivateKeys(items)
         items_json = json.dumps(items)
         return func.HttpResponse(
             items_json,
