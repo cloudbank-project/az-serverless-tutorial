@@ -303,9 +303,8 @@ And at the bottom of the file, let's add the following functions:
 
 def stripPrivateKeys(structure):
     if hasattr(structure, "keys"):
-        all_keys = list(structure)
-        for key in all_keys:
-            if key.startswith("_"):
+        for key in list(structure.keys()):
+            if hasattr(key, "startswith") and key.startswith("_"):
                 del structure[key]
             else:
                 stripPrivateKeys(structure[key])
