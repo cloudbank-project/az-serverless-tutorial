@@ -332,3 +332,20 @@ Now, change the IP address listed next to both the `Host` and `HostName` lines (
 
 Make sure to save the file when you're done.
 
+## Freezing up mid-work
+
+### Resizing the VM
+
+If your workstation keeps "freezing up" in the middle of your work (you can't run new terminal commands or save code files you're editing), the VM size may be too small. Thankfully, it's easier to make the VM bigger on the cloud.
+
+From the VM's dashboard on the web portal, turn the machine off by clicking the `Stop` button:
+
+![](./img/vm-stop.png)
+
+Within a minute or two, your machine should finish powering off. Once it has, select the `Size` option from the `Availability + scale` menu on the left:
+
+![](./img/vm-size-menu.png)
+
+From here, you can select a new machine size and click the blue `Resize` button at the bottom to make the change. We recommend trying out the size `B2s`, which is still relatively inexpensive but big enough to do your work without freezes. *Be very careful* which size you select here, as selecting the wrong one could burn a lot of money very quickly. Try `B2s`, and if that doesn't work, talk to your course staff.
+
+![](./img/vm-resize.png)
