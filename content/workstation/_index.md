@@ -349,3 +349,7 @@ Within a minute or two, your machine should finish powering off. Once it has, se
 From here, you can select a new machine size and click the blue `Resize` button at the bottom to make the change. We recommend trying out the size `B2s`, which is still relatively inexpensive but big enough to do your work without freezes. *Be very careful* which size you select here, as selecting the wrong one could burn a lot of money very quickly. Try `B2s`, and if that doesn't work, talk to your course staff.
 
 ![](./img/vm-resize.png)
+
+Once you've resized the VM, go back to the main dashboard page and click `Start` to turn the machine on again:
+
+![](./img/vm-off.png)
