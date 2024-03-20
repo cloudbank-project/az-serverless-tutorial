@@ -245,7 +245,6 @@ From here, if we open the `periodic-db` entry under the NOSQL API list, and then
 Yay! 👩‍🔬⚗️👨‍🔬🧪🧑‍🔬⚛️
 
 # 4. Querying the database
-
 Click the blue `Edit Filter` button and try entering a filter expression into the box, like:
 
 ```sql
