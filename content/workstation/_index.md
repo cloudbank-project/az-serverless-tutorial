@@ -19,19 +19,13 @@ This guide assumes that you have [VSCode](https://code.visualstudio.com/) instal
 
 # 1. Open the Azure portal
 
-TODO description
+There are a few different ways to manage your cloud VMs (and other cloud resources). Today we'll be using the **web portal**, which lets you do things like create, start and stop machines through an app in your web browser. Later, we'll learn how to do similar things using a **CLI**, which works by typing commands out in a terminal.
 
-## Logging in
-
-Navigate to the Azure Portal, which we'll be using to create an control cloud resources. When prompted to sign in, **use your UW NetID**:
+Navigate to the main Azure Portal page with the below link. When prompted to sign in, **use your UW email address**, after which you can log in with your UW NetID and password.
 
 {{% aside %}}
 🔗 [https://portal.azure.com](https://portal.azure.com)
 {{% /aside %}}
-
-## Getting to know the portal interface
-
-TODO
 
 # 2. Creating a VM
 
@@ -49,8 +43,8 @@ From here, we'll be presented with a configuration screen asking us to choose va
     
 On this page, configure these options as such:
 
-- Subscription: `TODO`
-- Resource group: Choose the pre-existing resource group that contains your UW NetID in the name. It will look something like `TODO`.
+- Subscription: Choose the subscription with `MSE544` in the title
+- Resource group: Choose the pre-existing resource group that contains your UW NetID in the name. It will look something like `rg-amlclass-[YOUR UW NETID]`.
 - Virtual machine name: Name the machine `[YOUR UW NETID]-workstation`, replacing `[YOUR UW NETID]` with your net ID
 - Region: This setting determines where (geographically) in the world our machine will be placed. It doesn't ultimately matter for us, but wherever possible try to create all of your cloud resources in one region. This keeps communication between them faster, more reliable, and in some cases cheaper.
 - Size: This setting controls how powerful the virtual machine is. The default setting, while good for data science, is likely way too over-powered for what we'll be using it for here. We can choose something much cheaper (around $8/month, instead of around $70/month). Click `See all sizes`:
