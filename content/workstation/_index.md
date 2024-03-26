@@ -52,7 +52,7 @@ On this page, configure these options as such:
 - Subscription: `TODO`
 - Resource group: Choose the pre-existing resource group that contains your UW NetID in the name. It will look something like `TODO`.
 - Virtual machine name: Name the machine `[YOUR UW NETID]-workstation`, replacing `[YOUR UW NETID]` with your net ID
-- Region: This setting determines where (geographically) in the world our machine will be placed. It doesn't ultimately matter for us, but just to keep things the same across the whole class let's choose `(US) West US 3`
+- Region: This setting determines where (geographically) in the world our machine will be placed. It doesn't ultimately matter for us, but wherever possible try to create all of your cloud resources in one region. This keeps communication between them faster, more reliable, and in some cases cheaper.
 - Size: This setting controls how powerful the virtual machine is. The default setting, while good for data science, is likely way too over-powered for what we'll be using it for here. We can choose something much cheaper (around $8/month, instead of around $70/month). Click `See all sizes`:
 
 ![](./img/vm-size-1.png)
@@ -60,6 +60,12 @@ On this page, configure these options as such:
 From the size screen, type `b1s` (1) into the search box and select the `B1s` machine type from the search results below (2). Finally, click `Select` at the bottom of the page (3):
 
 ![](./img/vm-size-2.png)
+
+{{%aside%}}
+**🙀Note!🙀**
+
+As you do your work in this lab, you may find your terminals freeze up and you are unable to save files. You may even see an error window pop up that says `Operation timed out`. If this happens, it might be because your VM is just a little bit too small. Thankfully, on the cloud, it's easy to [resize the machine later](#resizing-the-vm). Just keep this option in mind as you do your work.
+{{%/aside%}}
 
 Leave the rest of the settings on this page as-is and click the `Next: Disks >` button at the bottom.
 

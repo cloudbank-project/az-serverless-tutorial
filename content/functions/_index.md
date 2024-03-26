@@ -144,7 +144,7 @@ We need to add a function that will get run when the user visits our webpage. Th
 ```python
 
 @app.route(route="test")
-def test(request: func.HttpRequest) -> func.HttpResponse:
+def test(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
     return func.HttpResponse(
          "Hey Galaxy",
@@ -217,7 +217,7 @@ az login
 When it finishes, you should see some garbage spat out to the terminal including your UW NetID:
 ![](./img/azfn-cli-login.png)
 
-Now, publish your code by running the following command, where the blank `________` is replaced with your UW NetID:
+Now, publish your code by running the following command, where the blank `________` is replaced with the name of the function app you created in the web portal:
 
 ```bash
 func azure functionapp publish ________
@@ -409,13 +409,13 @@ func azure functionapp publish ________
 
 ![](./img/portal-fn-reopen.png)
 
-Select `Environment variables` from the `Settings` menu on the left:
+Select `Environment variables` from the `Settings` menu on the left. If it's not there, select `Configuration` instead (Microsoft is currently updating the menu organization, and unfortunately some users have the old version while others have the newer one). You ultimately want to end up at a table full of application settings, which should look something like this:
 
 ![](./img/portal-fn-env.png)
 
 On this page, add two new variables named `ACCOUNT_HOST` and `ACCOUNT_KEY`. Give them the values of their respective variables from `local.settings.json`, but _not_ surrounded by double-quotes `"`.
 
-When you're done, hit the blue `Apply` button at the bottom and confirm that you want to restart the app to make changes. _Now_, open the url `https://__________.azurewebsites.net/api/lookup?name=Carbon`, where the blank `_______` is replaced with your app name. You should see similar output to when you tested earlier:
+When you're done, hit the blue `Apply` button at the bottom (or the `Save` button at the top, whichever your web portal seems to have) and confirm that you want to restart the app to make changes. _Now_, open the url `https://__________.azurewebsites.net/api/lookup?name=Carbon`, where the blank `_______` is replaced with your app name. You should see similar output to when you tested earlier:
 
 ![](./img/azfn-browser-cloud-elem.png)
 

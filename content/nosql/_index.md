@@ -40,7 +40,7 @@ TODO
 - sub: TODO
 - rg: TODO
 - name: `______-periodic-db` w uwnetid
-- location: West US 3 (same as workstation vm, generally a good idea)
+- location: doesn't generally matter, but try to put it in the same region as your workstation vm if possible
 - Apply Free Tier Discount: Do **Not** Apply
 
 ![](./img/az-create-db-general.png)
@@ -285,5 +285,7 @@ For more detail about how to refine these filters, see the [official documentati
 
 🏆 **Challenge:**
 - Write a query that identifies the most massive element that was discovered before the year 1900.
+
+TODO: this requires you to modify the `SELECT * FROM...` portion of the query, which the GUI does not allow you to do. point out the right place to run the query.
 
 {{% /aside %}}
