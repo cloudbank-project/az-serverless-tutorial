@@ -13,112 +13,157 @@ This guide assumes that you've completed the [VM Workstation tutorial](../workst
 
 # 1. Get your environment ready
 
-## Portal
+## Portal and workstation
 
-TODO description
+We'll start by making sure our workstation VM is turned on. Open a web browser and log in to the Azure web portal.
 
 {{% aside %}}
 🔗 [https://portal.azure.com](https://portal.azure.com)
 {{% /aside %}}
 
+Go to the virtual machines dashboard by using the search bar at the top:
+
+![](./img/vm-open.png)
+
+Select your workstation VM from the list, and if it's stopped, click the `Start` button:
+
+![](./img/vm-off.png)
+
+Keep this window open in the background, we'll be using it again in a minute.
+
 ## VSCode
 
-TODO
+Open VSCode and make sure your window is remotely connected to your cloud virtual machine. If it is, you'll see the VM's public IP address in the bottom left blue box:
+
+![](./img/vscode-rc.png)
+
+If not, click the blue `><` button and open an SSH connection to the workstation as shown [in the workstation tutorial](../workstation/#4-opening-a-remote-vscode-window). 
 
 # 2. Create an empty database
 
-TODO
+Now we're ready to create our database!
+
+Go back to the web portal and search for `Cosmos`. Open up the dashboard for `Azure Cosmos DB`:
 
 ![](./img/az-search-cosmos.png)
 
+From here, create a new database by clicking the `+ Create` button:
+
 ![](./img/az-cosmos-dash.png)
+
+Azure supports a number of different database technologies, all of which are provided with the brand name "Cosmos DB". Today, we'll be makind a NoSQL document store, which they call "Cosmos DB for NoSQL". Click the `Create` button under the `Cosmos DB for NoSQL` heading:
 
 ![](./img/az-create-nosql.png)
 
+We'll be presented with a configuration page to select various database options. Choose the following:
 
-TODO
-- sub: TODO
-- rg: TODO
-- name: `______-periodic-db` w uwnetid
-- location: doesn't generally matter, but try to put it in the same region as your workstation vm if possible
+- **Subscription**: Choose the subscription with `MSE544` in the title
+- **Resource group**: Choose the pre-existing resource group that contains your UW NetID in the name. It will look something like `rg-amlclass-[YOUR UW NETID]`.
+- **Account Name**: Name your account `______-periodic-db`, where the blank `_______` is replaced with your UW NetID. In general, the account can be named whatever we want, but this format makes it easier for course staff to keep track of.
+- Location: The general rule here is to place your database in the same location as the VMs and other resources that access it -- this can make database accesses faster, and in some cases make things cheaper. For us, though, it doesn't matter. Leave it with its default value.
 - Apply Free Tier Discount: Do **Not** Apply
 
 ![](./img/az-create-db-general.png)
 
 
-`Next: Global Distribution >`
+When you're done, click `Next: Global Distribution >` at the bottom.
 
-- Geo-Redundancy: Disable 
-- Multi-region Writes: Disable
+On this page, choose the following options:
+- **Geo-Redundancy**: Disable. This option requests that Azure backs our data up in different physical locations around the world. Though good practice for important data, our exercise today isn't that important ;) .
+- **Multi-region Writes**: Disable
 
-`Next: Networking >`
+When you're done, click `Next: Networking >`.
 
-word about security
+There are no options we need to change here, but in general, this is how we would **limit database access to the outside world**. This is really important if our database stored personal data for human beings, or trade secrets for our employer. In cases like this, only VMs within our cloud account are allowed to access the database, and we can carefully control how the outside world accesses those. Ask your course staff if you're interested in learning more.
 
-`Review + Create`
+Now, click `Review + Create`, and then finally the blue `Create` button.
 
-Click blue create button.
-
-Wait a bit and click `Go to resource`:
+After a minute, the database should get created and we'll be presented with a blue `Go to resource` button. Click it:
 
 ![](./img/az-cosmos-created.png)
 
-
-automatically goes to quickstart, boo. go to data explorer instead:
+The portal will bring us to a quickstart page, but we're not going to follow those instructions. Instead, select the `Data Explorer` option on the left:
 
 ![](./img/az-cosmos-quickstart.png)
 
-
+From this page, we'll be able to see and edit the contents of the database. We're going to create a new **container** to contain our periodic table data. Click the `New Container` button:
 ![](./img/az-new-container.png)
 
-Choose --
-  - Create new database, id `periodic-db`
-  - Container id `elements`
-  - Partition key `/Period`. Talk about even scaling
-  - Max RU/s: 1000. Talk about RU estimation (read ~ 1 RU, write ~5 RUs)
+A configuration menu will slide in from the right. Enter the following options:
+  - **Database id**: Select `Create new`, and name it `periodic-db`
+  - **Container id**: Call it `elements`
+  - **Partition key**: Type out `/Period`. Note the beginning `/` and capitalization; these are important.
+
+    The partition key refers to a piece of data in each of our database entries that will arrange them into groups. The idea is to choose a key such that, in an average day reading from our database, no group will be accessed much more than any other group. Here we're choosing an chemical element's _period_ (row number in the periodic table) as the partition key. It's not necessarily the _best_ partition key, but for our project it's good enough.
+
+  - **Container Max RU/s**: Enter `1000`. This number is an estimate of how much data will be read and written from our database in a given second. The units here are called "RU"s ("request units"). Reading one entry from the database equates roughly to 1 RU, while writing one entry equates to 5 RUs. This value **directly influences how much our database will cost** (higher max RU/s, higher cost), so for a low-performance database we'll choose a low number.
   
 ![](./img/az-cosmos-container-options.png)
 
-Click OK at bottom
+When you're done, click OK at bottom of the sidebar.
 
-If all good:
+If all went well, we should see an empty database:
 ![](./img/az-cosmos-empty-container.png)
 
 Let's put some stuff in it!
 
 # 3. Populate the database
 
-TODO
 
-Name folder `db-populate`:
+Here's our strategy: we're going to download a collection of chemical element data in [CSV format](https://en.wikipedia.org/wiki/Comma-separated_values) (comma-separated values). We'll write a Python script to load this CSV file, and then insert its data into our cloud database.
 
-![](./img/vm-new-folder.png)
+To get started, head back to your remote VSCode window. Create a new terminal using the `Terminal -> New Terminal` menu option:
 
-
-New term
 ![](./img/vm-rc-term.png)
 
-Go into new folder with command:
+Make a new directory called `db-populate` with this command:
+
+```bash
+mkdir db-populate
+```
+
+Then enter it with the command:
 
 ```bash
 cd db-populate
 ```
+## Getting the data
 
-Now let's download the [periodic table data](https://gist.github.com/speters33w/e5b1246d6859f29c4f02a299714d4c20) using this terminal command:
+Now let's download the [periodic table data](https://gist.github.com/speters33w/e5b1246d6859f29c4f02a299714d4c20) using the `wget` command, which is a terminal command that downloads files the same way your web browser might. The general form of this command is:
+
 ```bash
-wget https://gist.githubusercontent.com/speters33w/e5b1246d6859f29c4f02a299714d4c20/raw/a78d747534b915c19c5fb6d1fac0df6a77d62452/Periodic%2520Table%2520of%2520Elements.csv -O periodic-table.csv
+wget [URL OF FILE TO DOWNLOAD] -O [NAME TO SAVE THE FILE AS] 
 ```
+
 (note that's a capital `-O`)
+
+For our periodic table data, use these options:
+
+- **URL**:
+```bash
+https://gist.githubusercontent.com/speters33w/e5b1246d6859f29c4f02a299714d4c20/raw/a78d747534b915c19c5fb6d1fac0df6a77d62452/Periodic%2520Table%2520of%2520Elements.csv
+```
+- **Filename**:
+```bash
+periodic-table.csv
+```
 
 Now if we open the `periodic-table.csv` file from the files bar on the left, we should see a bunch of raw elemental data:
 ![](./img/vm-csv.png)
 
 Let's load it into our database!
 
-New file named `requirements.txt`:
+## Installing Python requirements
+
+Next, create a new file named `requirements.txt`. Do this by right-clicking the `db-populate` folder in the explorer bar on the left, and selecting `New File...`. Name the file `requirements.txt`:
+
 ![](./img/vm-new-file.png)
 
-Paste in this text and save:
+
+(if the explorer bar isn't visible, try running the terminal command `code ~`)
+
+
+In the new file's text area, paste in this text and save:
 
 ```python
 pandas==2.0.3
@@ -127,27 +172,35 @@ azure-core==1.26.4
 azure-cosmos==4.3.1
 ```
 
-In terminal, install pip and venv
+Each line reports a different Python library that needs to be installed for our code to run:
+- **[pandas](https://pypi.org/project/pandas/)** is used to open and process CSV files
+- **[python-dotenv](https://pypi.org/project/python-dotenv/)** is used to load "secret" data like usernames and passwords that we don't want to put directly into our code
+- **[azure-core](https://pypi.org/project/azure-core/)** and **[azure-cosmos](https://pypi.org/project/azure-cosmos/)** are used to interact with the Azure cloud and our Cosmos DB, respectively.
+
+Now, back in the terminal, install pip and venvwith the following line:
 
 ```bash
 sudo apt install -y python3-pip python3-venv
 ```
 
-Now use pip to install pkgs
+`Pip` is a tool used to install Python libraries, while `venv` is a tool to help install multiple versions of a python library at one time.
+
+Finally, use pip to install the libraries listed by `requirements.txt` using the following command line:
 
 ```bash
 pip3 install -r requirements.txt
 ```
 
-Yay
+If all goes well, you should see a message like this:
 
 ![](./img/vm-pip-success.png)
 
-Ok new file again. Name it `process.py`:
 
-![](./img/vm-new-file.png)
+## Writing our code
 
-Plunk in this:
+Create another new file, and name this one `process.py`.
+
+Plunk this code into it:
 
 ```python
 #!/usr/bin/env python3
@@ -159,25 +212,37 @@ import dotenv
 import pandas as pd
 import azure.cosmos.cosmos_client as cosmos_client
 
+# Load secret data like our database key from a ".env" file
 dotenv.load_dotenv()
 
 def fail_error(msg):
-  sys.stderr.write("\033[1;31m{:}\n".format(msg))
-  sys.exit(2)  
+    """Print a nice red error to the screen and then exit the script"""
+    sys.stderr.write("\033[1;31m{:}\n".format(msg))
+    sys.exit(2)  
 
+# Crash the script intentionally if the .env file doesn't contain a
+# database URL and key:
 try:
-  HOST = os.environ['ACCOUNT_HOST']
-  MASTER_KEY = os.environ['ACCOUNT_KEY']
+    HOST = os.environ['ACCOUNT_HOST']
+    MASTER_KEY = os.environ['ACCOUNT_KEY']
 except KeyError:
-  fail_error("Get your database's account URL and key and set them in the ACCOUNT_HOST / ACCOUNT_KEY environment variables")
+    fail_error("Get your database's account URL and key and set them in the ACCOUNT_HOST / ACCOUNT_KEY environment variables")
+
+# Specify the database name and container name we want to work with:
 DATABASE_ID = "periodic-db"
 CONTAINER_ID = "elements"
 
 def dataframe_to_dicts(df):
+    """Function to loop through rows in a spreadsheet and spit them
+    out as Python dictionaries/NoSQL-style 'documents'"""
     for record in df.to_dict(orient='records'):
         yield {k:v for k,v in record.items() if not pd.isna(v)}
 
 def load_data(filename):
+    """Function to load periodic table data from a file and 'normalize'
+    it so that datapoints that are either true or false are actually 
+    represented by python 'True' and 'False' values (rather than the
+    words yes/no) """
     with open(filename, "r") as f:
         data = pd.read_csv(f, true_values=["yes"])
     for col in ["Radioactive", "Natural", "Metal", "Nonmetal", "Metalloid"]:
@@ -185,16 +250,23 @@ def load_data(filename):
     return dataframe_to_dicts(data)
 
 if __name__=="__main__":
+    # Make sure the script has a valid data filename specified:
     if len(sys.argv) != 2:
         fail_error("Specify input data file to import")
     if not os.path.isfile(sys.argv[1]):
         fail_error("Couldn't find specified input file. Check path/spelling for typos.")
 
+    # Open a connection to our cloud database account. Select the
+    # database and container specified at the top of this script.
     client = cosmos_client.CosmosClient(HOST, {'masterKey': MASTER_KEY})
     db = client.get_database_client(DATABASE_ID)
     container = db.get_container_client(CONTAINER_ID)
+
+    # Try to loop through each entry in the CSV file, and add it to
+    # our cloud database with the 'create_item' action
     try:
         for record in load_data(sys.argv[1]):
+            # Select the element's name as its unique ID in the database
             record["id"] = record["Element"]
             container.create_item(body=record)
             print("Added {:} ({:}) to db".format(record["Element"], record["AtomicNumber"]))
@@ -202,7 +274,7 @@ if __name__=="__main__":
         fail_error("Input file is not in CSV format")
 ```
 
-Then in the terminal, run the python script with the following terminal command:
+You should just be able to paste the above code into the file and save it (though your course staff encourage you to read through it!). Finally, in the terminal, run your code with the following command:
 
 ```bash
 python3 process.py periodic-table.csv
@@ -214,8 +286,8 @@ If all goes well, you should get this error:
 
 We've gotta tell the python script how to log in to our database! But how? UW NetID and password? _Way_ too insecure. A hacker could register you for the wrong classes.
 
+## URIs and Keys
 
-URIs and Keys:
 Make a new file called `.env`, and inside it put the text:
 
 ```python
@@ -285,7 +357,5 @@ For more detail about how to refine these filters, see the [official documentati
 
 🏆 **Challenge:**
 - Write a query that identifies the most massive element that was discovered before the year 1900.
-
-TODO: this requires you to modify the `SELECT * FROM...` portion of the query, which the GUI does not allow you to do. point out the right place to run the query.
 
 {{% /aside %}}
