@@ -12,4 +12,4 @@ This website hosts a series of tutorials explaining how to use Microsoft's Visua
 
 # Credits and acknowledgement
 
-These tutorials were written by [Naomi Alterman](https://staff.uw.edu/naomila) through her work at the [UW eScience Institute](https://escience.uw.edu), funded in part by the [CloudBank](https://www.cloudbank.org) project ([NSF award #1925001](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1925001))
+These tutorials were written by [Naomi Alterman](https://staff.uw.edu/naomila) through her work at the [UW eScience Institute](https://escience.uw.edu), funded in part by the [CloudBank](https://www.cloudbank.org) project ([NSF award #1925001](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1925001)). Invaluable beta testing and comments were provided by [Wenjing Ma](https://depts.washington.edu/synlab/people/wenjing-ma/) and [Rob Fatland](https://escience.washington.edu/member/rob-fatland/).
