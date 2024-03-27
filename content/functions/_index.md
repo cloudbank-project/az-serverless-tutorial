@@ -5,43 +5,53 @@ title: "Providing a public API with serverless functions on Azure"
 
 # 0. Introduction
 
-In this tutorial TODO
+In this tutorial we're going to build a **web API** ("application programming interface") to access information about the elements of the periodic table. A web API is very similar to a traditional website, but instead of formatting the pages for human readability, they are formatted to be easily read by computers and code. This is a very common way to make [all sorts of data](https://apilist.fun/) available.
+
+Specifically, we're going to build our API using "**serverless functions**", which allow us to upload individual Python functions into the cloud and run them when someone goes to our API's web URL. The value returned by our code will be what the page loads on the visitor's computer. This has a few benefits for us:
+
+* We are only charged money for the seconds that the code is running. The alternative is to leave a VM with our Python script on 24/7 in case someone visits our API (a "server"). That costs a _lot more_ money. 
+* By making data available through an API, we can write code that controls who has access to it and when. Our API today is going to be public, but to control the cost of providing it we could limit access to users with unique IDs and bill them for their usage. This is common practice for [scientific APIs](https://sciencegateways.org/) with big cloud bills and limited funds.
+* We can store the access keys to our internal database safely in our cloud code, which the public will never hace access to. They can see the results of our code, but not the code itself!
 
 This guide assumes that you've completed the [VM Workstation tutorial](../workstation) and [NoSQL](../nosql). If you haven't, go back and skim through those now. Using a remote VM is not required to do any of the things outlined in this tutorial, but it _will_ make it easier for course staff to help you debug things. If you were unable to complete the NoSQL tutorial, you can use the databases that your classmates or course staff made; just ask them for the appropriate URI and access key (this tutorial will remind you when you get to that point).
 
 # 1. Get your environment ready
 
-## Portal
+## Portal and workstation
 
-TODO description
+We'll start by making sure our workstation VM is turned on. Open a web browser and log in to the Azure web portal.
 
 {{% aside %}}
 🔗 [https://portal.azure.com](https://portal.azure.com)
 {{% /aside %}}
 
+Go to the virtual machines dashboard by using the search bar at the top:
+
+![](./img/vm-open.png)
+
+Select your workstation VM from the list, and if it's stopped, click the `Start` button:
+
+![](./img/vm-off.png)
+
+Keep this window open in the background, we'll be using it again in a minute.
+
 ## VSCode
 
-Make sure your workstation VM is started
+Open VSCode and make sure your window is remotely connected to your cloud virtual machine. If it is, you'll see the VM's public IP address in the bottom left blue box:
 
-In VSCode, click the `><` button in the bottom-left
+![](./img/vscode-rc.png)
 
-![](./img/vs-connect-1.png)
-
-Choose the row that mentions 'SSH'
-
-![](./img/vs-connect-2.png)
-
-
-Select the entry corresponding to the IP address of your workstation VM
+If not, click the blue `><` button and open an SSH connection to the workstation as shown [in the workstation tutorial](../workstation/#4-opening-a-remote-vscode-window). 
 
 # 2. Set up Azure Function Core Tools
 
-Going to install Azure Function Core Tools.  TODO: better descritpion.
+Azure provides us with an application called "Azure Function Core Tools" that we can install on our workstation VM (or personal computer) to test out our API code before actually publishing it. The core tools will let us invoke our Python code from a web browser, but using a private URL that _only_ browsers on our workstation  VM (or personal computer) can access.
 
-Open a new terminal in the remote VSCode window:
+To install Azure Function Core Tools, start by opening a new terminal in the remote VSCode window:
 ![](./img/vs-new-term.png)
 
-Run this: 
+Run these commands to install Microsoft's code signing key to your VM. This helps us confirm that any Microsoft-provided tools we install are free of viruses or malware: 
+
 ```bash
 curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
 sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
@@ -51,25 +61,20 @@ The first command should complete without errors, and the second shouldn't leave
 
 ![](./img/azfn-install-key-success.png)
 
-Now:
+Now, run this command to let the `apt` tool, which we use to install software, know about Microsoft's software. The command should complete without output:
 
 ```bash
 sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-$(lsb_release -cs)-prod $(lsb_release -cs) main" > /etc/apt/sources.list.d/dotnetdev.list'
 ```
 
-Complete without output
+Finally, run these two commands to install the core tools:
 
-Now:
 ```bash
 sudo apt-get update
-```
-
-And then: 
-```bash
 sudo apt-get install -y azure-cli azure-functions-core-tools-4
 ```
 
-To confirm it was successful, you should be able to run this command and see a version number get printed out (it may vary from the screenshot below):
+To confirm it was successful, you should be able to run the core tools with the `func` command and see a version number get printed out (it may vary from the screenshot below):
 
 ```bash
 func --version
@@ -77,37 +82,42 @@ func --version
 
 ![](./img/azfn-version.png)
 
-For future reference, the full documentation for how to install these tools on your own computer is [here](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local)
+For future reference, the full documentation for how to install these tools on your own computer is [here](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local).
 
 # 3. Building our first web API
 
 
 ## Creating a starter project
 
+Let's make a new folder to keep our function code in. Make a directory `db-api` and move into it with these terminal commands:
+
 ```bash
 mkdir ~/db-api
 cd ~/db-api
 ```
 
+Then, use the core tools to create a new Python project:
+
 ```bash
 func init --worker-runtime python
 ```
 
-on success, we'll see it creates a bunch of files:
+On success, we'll see it creates a bunch of files:
 
 ![](./img/azfn-success.png)
 
-let's open this folder in VSCode now using the command:
+Let's open this folder in VSCode now using the command:
 
 ```bash
 code .
 ```
 
-should see all these files in the files pane:
+This should let us see all the project files in the left sidebar:
 ![](./img/azfn-workspace.png)
 
 
-Now let's create a "venv" ("virtual environment") for the function to execute in. In a terminal, run this command to create a new environment:
+Now let's create a "venv" ("virtual environment") for the function to execute in. In a new terminal, run this command to create a new environment:
+
 ```bash
 python3 -m venv app-env
 ```
@@ -120,12 +130,12 @@ You should see the environment name appear before the regular stuff in the termi
 
 ![](./img/azfn-venv.png)
 
-In general, you'll only need to create the environment once, but "activate"/**enter it every time you open a new terminal**. If you're not sure, look for that `(app-env)` text before the rest of the command prompt. If you don't see it, run that `activate` command above.
+In general, you'll only need to create the environment once, but you might need to "activate" it every time you open a new terminal. If you're not sure, look for that `(app-env)` text before the rest of the command prompt. If you don't see it, run that `activate` command above.
 
 
 ## Looking around
 
-Open `function_app.py`
+Our Python code is ultimately going to be stored in `function_app.py`. Double-click it in the file bar on the left to open it.
 
 Right now, it does nothing:
 
@@ -138,8 +148,9 @@ import logging
 app = func.FunctionApp()
 ```
 
+Let's add a function that will run when users visit a page called `test` on our website. To do so we'll define a Python function called `test`, and annotate it with a line that defines it as the **route** for the URL `test`.
 
-We need to add a function that will get run when the user visits our webpage. The return value of the function will be what the user sees in their browser. Paste this at the bottom of the file:
+Paste this at the bottom of the file:
 
 ```python
 
@@ -152,7 +163,9 @@ def test(req: func.HttpRequest) -> func.HttpResponse:
     )
 ```
 
-Now in terminal:
+That `@app.route` line is what connects web browsers visiting `http://www.example.com/api/test` to the Python function `test`. The `logging.info` line prints a message to our private terminal window, but the message won't be seen by visitors to the web URL. The only thing the web visitor will see is the text "Hey Galaxy" (the result of the `return` statement), and the status code `200`, which in web world represents "success" 🎊🎉. For a list of all the status codes, and what they mean, look [here](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status).
+
+Now in terminal, let's start the server with this command:
 
 ```bash
 func start
@@ -160,7 +173,7 @@ func start
 
 ![](./img/azfn-test.png)
 
-Test just for you :) . Try opening the URL it suggests in a web browser:
+As long as this command is running, we should be able to visit the URLs it provides. Try opening the 'test' route in a web browser:
 
 ![](./img/azfn-browser-test.png)
 
@@ -170,23 +183,23 @@ When you're done testing, go back to the terminal in VSCode and hit `Control + C
 
 ## Setting up our cloud app
 
-Let's make it so anyone can see it.
+Let's make publish our function to the cloud so anyone can run it.
 
-On the Azure portal, open the Function Apps dashboard by searching for `Function Apps` at the top
+On the Azure portal, open the Function Apps dashboard by searching for `Function Apps` at the top:
 
 ![](./img/portal-fn-search.png)
 
-Then click create
+From this dashboard, click `+ Create`:
 
 ![](./img/portal-fn-create.png)
 
 On the wizard page select the following options:
-- **Subscription**: `MSE544_2024`
-- **Resource gropu**: Whichever group has your UW NetID in its name
+- **Subscription**: Choose the subscription with `MSE544` in the title
+- **Resource gropu**: Choose the resource group that contains your UW NetID in its name
 - **Function App name**: This is the name that will be in your app's web URL, so it has to be globally unique. Choose something like `______-atomic-portal`, where the blank `_______` is replaced with your UW NetID.
 - **Runtime stack**: This is the programming language your function code is written in. Choose Python.
 - **Version**: This is the version of the programming language your code was written in. We can leave it as whatever default is selected.
-- **Region**: Choose the same region as you did for your database. This is likely `West US 3`.
+- **Region**: Choose the same region as you did for your [NoSQL database](../nosql).
 
 ![](./img/portal-fn-wizard.png)
 
@@ -235,7 +248,7 @@ Trying that out in a web browser should lead to our `Hey Galaxy` page!
 
 ## Allowing annonymous requests
 
-If we were to use more advanced tools to open that web URL, we'd find we were getting an error called `401 Unauthorized`. It turns out, by default, Azure function apps need users to be logged in or have access keys to use the functions we publish. This is because folks often use Azure functions to work with sensitive or private data, and want to make sure only authorized users are running their code.
+If we were to use more advanced tools to open that web URL, we'd find we were getting an error called [`401 Unauthorized`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401). It turns out, by default, Azure function apps need users to be logged in or have access keys to use the functions we publish. This is because folks often use Azure functions to work with sensitive or private data, and want to make sure only authorized users are running their code.
 
 But we don't care about that! We just want to allow the world to read our periodic table database. To do so, we have to change our function to allow *anonymous access*.
 
@@ -269,30 +282,32 @@ Your friends should be able to as well. Ask them to try it out!
 
 Now we'll add another function to our API that allows users to perform element lookups from our NoSQL database.
 
-First, let's open up `requirements.txt`, which lists the packages required for our code to run. Add the following two lines to the bottom, and save the file:
+First, let's open up `requirements.txt` which, as in the NoSQL tutorial, lists the packages required for our code to run. Add the following two lines to the bottom, and save the file:
 
 ```python
 azure-core==1.26.4
 azure-cosmos==4.3.1
 ```
 
-Open a terminal in the `db-api` folder and install these to our workstation VM by running the following command:
+In the terminal, make sure we're in the `db-api` folder and that our virtual environment is activated. Then, run the following command:
 
 ```bash
 python3 -m pip install -r requirements.txt
 ```
-
 
 Now return to `function_app.py`. Add this to the top of the file, right after the `import logging` line:
 ```python
 import os
 import azure.cosmos.cosmos_client as cosmos_client
 
+# Load secret database keys from the working environment
 try:
   HOST = os.environ['ACCOUNT_HOST']
   MASTER_KEY = os.environ['ACCOUNT_KEY']
 except KeyError:
   logging.error("Get your database's account URL and key and set them in the ACCOUNT_HOST / ACCOUNT_KEY environment variables")
+
+# Identify the database and container we want to read from
 DATABASE_ID = "periodic-db"
 CONTAINER_ID = "elements"
 ```
@@ -302,6 +317,14 @@ And at the bottom of the file, let's add the following functions:
 ```python
 
 def stripPrivateKeys(structure):
+    """
+    Given a NoSQL database entry, remove any internal pieces of data
+    whose names start with an underscore '_'. This function will
+    search through nested dictionaries and lists. It modifies the
+    'structure' input in-place. For us, this means the copy of the
+    data in Python world gets changed (the copy in the database stays
+    the same).
+    """
     if hasattr(structure, "keys"):
         for key in list(structure.keys()):
             if hasattr(key, "startswith") and key.startswith("_"):
@@ -312,8 +335,12 @@ def stripPrivateKeys(structure):
         for elem in structure:
             stripPrivateKeys(elem)
 
+# Add a new API route called "lookup" to look up an element's information
+# by its name:
 @app.route(route="lookup", auth_level=func.AuthLevel.ANONYMOUS)
 def lookup(req: func.HttpRequest) -> func.HttpResponse:
+    # Get the "name" input from the URL (or request body, if it's not
+    # in the url):
     element = req.params.get('name')
     if not element:
         try:
@@ -322,11 +349,20 @@ def lookup(req: func.HttpRequest) -> func.HttpResponse:
             pass
         else:
             element = req_body.get('name')
-
+            
     if element:
+        # An element name was provided!
+
+        # Open a database connection
         client = cosmos_client.CosmosClient(HOST, {'masterKey': MASTER_KEY})
         db = client.get_database_client(DATABASE_ID)
         container = db.get_container_client(CONTAINER_ID)
+        
+        # Do a database query that fetches all database entries
+        # with the provided element name. In theory, this should
+        # only be one element, but in general SQL queries can
+        # return more than one object, so we get a list. It's just
+        # that the list will almost always contain only one element.
         items = list(container.query_items(
             query="SELECT * FROM r WHERE r.id=@id",
             parameters=[
@@ -334,7 +370,13 @@ def lookup(req: func.HttpRequest) -> func.HttpResponse:
             ],
             enable_cross_partition_query=True
         ))
+
+        # Strip out internal database keys that have nothing
+        # to do with the chemical data itself
         stripPrivateKeys(items)
+
+        # Turn the element data into a string using the "json"
+        # library, and return it to the user
         items_json = json.dumps(items)
         return func.HttpResponse(
             items_json,
@@ -342,6 +384,7 @@ def lookup(req: func.HttpRequest) -> func.HttpResponse:
             status_code=200
         )
     else:
+        # No element was provided, return an error message
         return func.HttpResponse(
              "Provide an element, honey..",
              status_code=404
@@ -349,7 +392,23 @@ def lookup(req: func.HttpRequest) -> func.HttpResponse:
 
 ```
 
-But we're still not done. We need to give our code the secret access keys to the database.
+Serverless functions are able to receive input data through "URL parameters", similar to how normal Python functions have input parameters after their parantheses (eg, the "hello" in `print("hello")`). That said, they're structured a little differently. The person running the code, by visiting the API's URL in a web browser, needs to provide values by putting them at the end of the URL, in this format:
+
+```bash
+http://example.com/api/route?name1=value1&name2=value2&name3=value3...
+```
+
+These values are called an **argument list**. The argument list always goes at the end of the URL, and starts with a `?`. After that, the input parameter's name, an `=` sign, and then input data itself. If there are further values that need to be provided, they're chained together with `&`s.
+
+On the Python side, these values can be found inside the function's `req` input. We can see the code retrieving the value of a parameter called `name` with the code `req.params.get('name')`.
+
+So, to look up the element Carbon, you would type out a URL like this:
+```bash
+http://__________/api/lookup?name=Carbon
+```
+Where the blank `______` is replaced with the proper begnning of your function app's URL.
+
+But we're not ready to test it just yet. We need to give our code the secret access keys to the database.
 
 ## Access credentials 
 
@@ -395,11 +454,11 @@ If you see the above, that's a great sign! Now let's look up a specific element.
 
 ![](./img/azfn-browser-elem-2.png)
 
-That means it works! Hurray! The exact formatting/coloring of the information will likely look different on your computer, but if the information is there, that's what we care about. If you __don't__ see information about carbon in your browser, (a) make sure it's capitalized, (b) look in the VSCode terminal for the red error output. This is the first information needed to debug the problem (which your classmates and course staff can help you with).
+That means it works! Hurray! The exact formatting/coloring of the information will likely look different on your computer, but if the information is there, that's what we care about. If you __don't__ see information about carbon in your browser, (a) make sure it's capitalized, (b) look in the VSCode terminal for the red error output. This is the first information needed to debug the problem (which your classmates and course staff can help you with). Your course staff can help you with the rest.
 
 ## Publishing
 
-Push your code into the cloud with that old command,
+Once we get the local testing version of the API route working, push it into the cloud with this command:
 
 ```bash
 func azure functionapp publish ________
