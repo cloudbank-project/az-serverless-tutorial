@@ -43,6 +43,19 @@ Open VSCode and make sure your window is remotely connected to your cloud virtua
 
 If not, click the blue `><` button and open an SSH connection to the workstation as shown [in the workstation tutorial](../workstation/#4-opening-a-remote-vscode-window). 
 
+
+{{%aside%}}
+⛔ **Having trouble with your VM?** ⛔
+
+If you can't connect VSCode to your VM, check out these troubleshooting guides from the Workstation tutorial:
+
+- [VSCode can connect, but keeps freezing up](../workstation/#freezing-up-mid-work)
+- [VSCode can't connect at all: Error “Permission denied (publickey)”](../workstation/#error-permission-denied-publickey)
+- [VSCode can't connect at all: Error “The connection timed out”](../workstation/#taking-a-long-time-to-connect)
+
+{{%/aside%}}
+
+
 # 2. Set up Azure Function Core Tools
 
 Azure provides us with an application called "Azure Function Core Tools" that we can install on our workstation VM (or personal computer) to test out our API code before actually publishing it. The core tools will let us invoke our Python code from a web browser, but using a private URL that _only_ browsers on our workstation  VM (or personal computer) can access.

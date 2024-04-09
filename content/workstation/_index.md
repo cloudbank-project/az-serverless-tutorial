@@ -84,9 +84,16 @@ You will be prompted to create and download a key file. Click the blue button, w
 
 ![](./img/vm-keypair.png)
 
-Azure will now take a minute or two to create the VM. When it's done, you'll be presented with a 'Go to resource' button. Click that to view machine details:
+Azure will now take a minute or two to create the VM. When it's done, you should see a green checkmark and a 'Go to resource' button. Click that to view machine details.
+
+{{%aside%}}
+⛔ **If this step fails** ⛔
+
+If VM creation fails, you'll see a red X instead of a green checkmark and no `Go to resource` button. Check out this guide's [troubleshooting section](#deployment-failure) for tips on what to do next.
+{{%/aside%}}
 
 ![](./img/vm-goto-resource.png)
+
 
 From this page we can turn the machine off/on, and view details like its public IP address (the name we use to find it on the internet). You can also get back to this dashboard page from the main Virtual Machines dashboard, which we navigated to at the beginning of this tutorial:
 
@@ -178,11 +185,22 @@ A new window will oppen immediately. The first time you do this, you may be aske
 
 ![](./img/vscode-rc-known-host.png)
 
-After a few moments, if all is successful, you'll see `SSH: __.__.__.__` in the corner of the window, where `__.__.__.__` is the VM's IP:
+After a few moments, if all is successful, you'll see `SSH: __.__.__.__` in the corner of the window, where `__.__.__.__` is the VM's IP.
+
+
 
 ![](./img/vscode-rc-success.png)
 
-If this does _not_ happen, or an error box pops up, refer to the [troubleshooting section](#perma-troubleshooting) of this document.
+{{%aside%}}
+⛔ **If this step fails** ⛔
+
+If you can't connect VSCode to your VM, there could be a number of problems. Here are some troubleshooting guides:
+
+- [VSCode can connect, but keeps freezing up](#freezing-up-mid-work)
+- [VSCode can't connect at all: Error “Permission denied (publickey)”](#error-permission-denied-publickey)
+- [VSCode can't connect at all: Error “The connection timed out”](#taking-a-long-time-to-connect)
+
+{{%/aside%}}
 
 Finally, to view the files on this remote machine, select `File > Open Folder`:
 
@@ -245,6 +263,20 @@ You can power the VM down by going to its dashboard on the Azure web portal and 
 
 # 7. Troubleshooting
 <a id="perma-troubleshooting"></a>
+
+## Deployment Failure
+
+When you're creating a new VM, the process can fail after you click the blue `Create` button. The resulting screen may look something like this:
+
+![](./img/vm-deploy-failure.png)
+
+Depending on the error, this could be for a number of reasons:
+
+### Error "`ZonalAllocationFailed`"
+
+The error code `ZonalAllocationFailed` means that there are (currently) no unused VMs of the size we selected in the region we selected. We can fix this problem by restarting the VM creation process and *choosing a different region*. You'll find that option on the first page of the VM creation wizard:
+
+![](./img/vm-wizard-1.png)
 
 ## Error "Permission denied (publickey)"
 
