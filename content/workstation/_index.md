@@ -43,11 +43,12 @@ From here, we'll be presented with a configuration screen asking us to choose va
     
 On this page, configure these options as such:
 
-- Subscription: Choose the subscription with `MSE544` in the title
-- Resource group: Choose the pre-existing resource group that contains your UW NetID in the name. It will look something like `rg-amlclass-[YOUR UW NETID]`.
-- Virtual machine name: Name the machine `[YOUR UW NETID]-workstation`, replacing `[YOUR UW NETID]` with your net ID
-- Region: This setting determines where (geographically) in the world our machine will be placed. It doesn't ultimately matter for us, but wherever possible try to create all of your cloud resources in one region. This keeps communication between them faster, more reliable, and in some cases cheaper.
-- Size: This setting controls how powerful the virtual machine is. The default setting, while good for data science, is likely way too over-powered for what we'll be using it for here. We can choose something much cheaper (around $8/month, instead of around $70/month). Click `See all sizes`:
+- **Subscription**: Choose the subscription with `MSE544` in the title
+- **Resource group**: Choose the pre-existing resource group that contains your UW NetID in the name. It will look something like `rg-amlclass-[YOUR UW NETID]`.
+- **Virtual machine name**: Name the machine `[YOUR UW NETID]-workstation`, replacing `[YOUR UW NETID]` with your net ID
+- **Region**: This setting determines where (geographically) in the world our machine will be placed. It doesn't ultimately matter for us, but wherever possible try to create all of your cloud resources in one region. This keeps communication between them faster, more reliable, and in some cases cheaper.
+- **Availability options**: Choose `No infrastructure redundancy required`. Redundancy options allow us to reserve "backup" VMs in case the primary one becomes unavailable. For our purposes, this isn't necessary (and can make it harder to create the VM), so we opt out of it.
+- **Size**: This setting controls how powerful the virtual machine is. The default setting, while good for data science, is likely way too over-powered for what we'll be using it for here. We can choose something much cheaper (around $8/month, instead of around $70/month). Click `See all sizes`:
 
 ![](./img/vm-size-1.png)
 
