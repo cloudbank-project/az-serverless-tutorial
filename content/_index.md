@@ -8,7 +8,7 @@ This website hosts a series of tutorials explaining how to use Microsoft's Visua
 # Modules
 ## 1. [VMs and Workstations](workstation)
 ## 2. [NoSQL Databases](nosql)
-## 2. [Serverless Functions and APIs](functions)
+## 3. [Serverless Functions and APIs](functions)
 
 # Credits and acknowledgement
 
