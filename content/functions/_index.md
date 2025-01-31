@@ -63,7 +63,23 @@ Azure provides us with an application called "Azure Function Core Tools" that we
 To install Azure Function Core Tools, start by opening a new terminal in the remote VSCode window:
 ![](./img/vs-new-term.png)
 
-Run these commands to install Microsoft's code signing key to your VM. This helps us confirm that any Microsoft-provided tools we install are free of viruses or malware: 
+We'll start by installing the "Azure CLI," which provides some general useful commands in our terminal for interacting with AzureRun this command:
+
+```bash
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+```
+
+It should output a bunch of junk. If it was successful, you should be able to run this command:
+
+```bash
+az
+```
+
+and see output like this:
+
+![](./img/azcli-install.png)
+
+Now we'll install the Function Core Tools. Run these commands to install Microsoft's code signing key to your VM. This helps us confirm that any Microsoft-provided tools we install are free of viruses or malware:
 
 ```bash
 curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
@@ -77,14 +93,14 @@ The first command should complete without errors, and the second shouldn't leave
 Now, run this command to let the `apt` tool, which we use to install software, know about Microsoft's software. The command should complete without output:
 
 ```bash
-sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-$(lsb_release -cs)-prod $(lsb_release -cs) main" > /etc/apt/sources.list.d/dotnetdev.list'
+sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-$(lsb_release -cs 2>/dev/null)-prod $(lsb_release -cs 2>/dev/null) main" > /etc/apt/sources.list.d/dotnetdev.list'
 ```
 
 Finally, run these two commands to install the core tools:
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y azure-cli azure-functions-core-tools-4
+sudo apt-get install -y azure-functions-core-tools-4
 ```
 
 To confirm it was successful, you should be able to run the core tools with the `func` command and see a version number get printed out (it may vary from the screenshot below):
