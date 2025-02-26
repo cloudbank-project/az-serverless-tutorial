@@ -223,8 +223,8 @@ From this dashboard, click `+ Create`:
 ![](./img/portal-fn-create.png)
 
 On the wizard page select the following options:
-- **Subscription**: Choose the subscription with `MSE544` in the title
-- **Resource gropu**: Choose the resource group that contains your UW NetID in its name
+- **Subscription**: Your course staff should announce to you what subscription to use. If you're not sure, ask them.
+- **Resource group**: Choose the resource group that contains your UW NetID in its name
 - **Function App name**: This is the name that will be in your app's web URL, so it has to be globally unique. Choose something like `______-atomic-portal`, where the blank `_______` is replaced with your UW NetID.
 - **Runtime stack**: This is the programming language your function code is written in. Choose Python.
 - **Version**: This is the version of the programming language your code was written in. We can leave it as whatever default is selected.

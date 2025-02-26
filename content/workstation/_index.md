@@ -43,7 +43,7 @@ From here, we'll be presented with a configuration screen asking us to choose va
     
 On this page, configure these options as such:
 
-- **Subscription**: Choose the subscription with `MSE544` in the title
+- **Subscription**: Your course staff should announce to you what subscription to use. If you're not sure, ask them.
 - **Resource group**: Choose the pre-existing resource group that contains your UW NetID in the name. It will look something like `rg-amlclass-[YOUR UW NETID]`.
 - **Virtual machine name**: Name the machine `[YOUR UW NETID]-workstation`, replacing `[YOUR UW NETID]` with your net ID
 - **Region**: This setting determines where (geographically) in the world our machine will be placed. It doesn't ultimately matter for us, but wherever possible try to create all of your cloud resources in one region. This keeps communication between them faster, more reliable, and in some cases cheaper.

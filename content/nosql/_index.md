@@ -68,7 +68,7 @@ Azure supports a number of different database technologies, all of which are pro
 
 We'll be presented with a configuration page to select various database options. Choose the following:
 
-- **Subscription**: Choose the subscription with `MSE544` in the title
+- **Subscription**: Your course staff should announce to you what subscription to use. If you're not sure, ask them.
 - **Resource group**: Choose the pre-existing resource group that contains your UW NetID in the name. It will look something like `rg-amlclass-[YOUR UW NETID]`.
 - **Account Name**: Name your account `______-periodic-db`, where the blank `_______` is replaced with your UW NetID. In general, the account can be named whatever we want, but this format makes it easier for course staff to keep track of.
 - Location: The general rule here is to place your database in the same location as the VMs and other resources that access it -- this can make database accesses faster, and in some cases make things cheaper. For us, though, it doesn't matter. Leave it with its default value.
