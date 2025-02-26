@@ -285,7 +285,11 @@ When connceting to a remote machine, you may encounter an error with the message
 
 ![](./img/vscode-permission-denied.png)
 
-If this occurs, a few things could be causing the problem. Click 'More Actions...', and scroll up in the error output log at the bottom of the window. Scroll until you find the text `azureuser@________: Permission denied (publickey).` It'll look something like the red-circled text below:
+If this occurs, a few things could be causing the problem. Click 'More Actions...', then hold the `Control` key and click the `Output log...` link in the terminal at the bottom of the screen:
+
+![](./img/vscode-view-output.png)
+
+Scroll up in the error output log at the bottom of the window until you find the text `azureuser@________: Permission denied (publickey).` It'll look something like the red-circled text below:
 
 ![](./img/vscode-error-scroll.png)
 
