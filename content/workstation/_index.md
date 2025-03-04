@@ -235,7 +235,15 @@ sudo apt update
 
 ![](./img/vscode-rc-term-2.png)
 
-Now we're going to install a very important tool called `nyancat`. To do so, run the following command:
+Next, we'll install pip and venv with the following line:
+
+```bash
+sudo apt install -y python3-pip python3-venv
+```
+
+`Pip` is a tool used to install Python libraries, while `venv` is a tool to help install multiple versions of a python library at one time. We'll be using these tools in future tutorials.
+
+And finally, we're going to install a very important tool called `nyancat`. To do so, run the following command:
 
 ```bash
 sudo apt-get install -y nyancat

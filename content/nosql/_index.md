@@ -107,7 +107,7 @@ A configuration menu will slide in from the right. Enter the following options:
 
     The partition key refers to a piece of data in each of our database entries that will arrange them into groups. The idea is to choose a key such that, in an average day reading from our database, no group will be accessed much more than any other group. Here we're choosing an chemical element's _period_ (row number in the periodic table) as the partition key. It's not necessarily the _best_ partition key, but for our project it's good enough.
 
-  - **Container Max RU/s**: Enter `1000`. This number is an estimate of how much data will be read and written from our database in a given second. The units here are called "RU"s ("request units"). Reading one entry from the database equates roughly to 1 RU, while writing one entry equates to 5 RUs. This value **directly influences how much our database will cost** (higher max RU/s, higher cost), so for a low-performance database we'll choose a low number.
+  - **Container Max RU/s**: Enter `1000`. This number is an estimate of how much data will be read and written from our database in a given second. The units here are called "RU"s ("request units"). Reading one entry from the database equates roughly to 1 RU, while writing one entry equates to 5 RUs. This value **directly influences how much our database will cost** (higher max RU/s, higher cost).
   
 ![](./img/az-cosmos-container-options.png)
 
@@ -138,6 +138,10 @@ Then enter it with the command:
 ```bash
 cd db-populate
 ```
+
+Next, we'll create a "virtual environment" ("venv") in this directory, inside of which we can install the various
+
+
 ## Getting the data
 
 Now let's download the [periodic table data](https://gist.github.com/speters33w/e5b1246d6859f29c4f02a299714d4c20) using the `wget` command, which is a terminal command that downloads files the same way your web browser might. The general form of this command is:
@@ -166,35 +170,43 @@ Let's load it into our database!
 
 ## Installing Python requirements
 
+First, let's create a Python virtual environment ("venv") inside of which we'll install the various Python libraries we'll be using.
+
+Start by running this command to create it:
+
+```bash
+python3 -m venv populate-env
+```
+
+And then run this command to enter it:
+```bash
+source populate-env/bin/activate
+```
+You should see the environment name appear before the regular stuff in the terminal prompt:
+
+![](./img/az-venv.png)
+
+In general, you'll only need to create the environment once, but you might need to "activate" it every time you open a new terminal. If you're not sure, look for that `(populate-env)` text before the rest of the command prompt. If you don't see it, run that `activate` command above.
+
 Next, create a new file named `requirements.txt`. Do this by right-clicking the `db-populate` folder in the explorer bar on the left, and selecting `New File...`. Name the file `requirements.txt`:
 
 ![](./img/vm-new-file.png)
 
-
 (if the explorer bar isn't visible, try running the terminal command `code ~`)
-
 
 In the new file's text area, paste in this text and save:
 
 ```python
-pandas==2.0.3
-python-dotenv==1.0.1
-azure-core==1.26.4
-azure-cosmos==4.3.1
+pandas
+python-dotenv
+azure-core
+azure-cosmos
 ```
 
 Each line reports a different Python library that needs to be installed for our code to run:
 - **[pandas](https://pypi.org/project/pandas/)** is used to open and process CSV files
 - **[python-dotenv](https://pypi.org/project/python-dotenv/)** is used to load "secret" data like usernames and passwords that we don't want to put directly into our code
 - **[azure-core](https://pypi.org/project/azure-core/)** and **[azure-cosmos](https://pypi.org/project/azure-cosmos/)** are used to interact with the Azure cloud and our Cosmos DB, respectively.
-
-Now, back in the terminal, install pip and venvwith the following line:
-
-```bash
-sudo apt install -y python3-pip python3-venv
-```
-
-`Pip` is a tool used to install Python libraries, while `venv` is a tool to help install multiple versions of a python library at one time.
 
 Finally, use pip to install the libraries listed by `requirements.txt` using the following command line:
 
@@ -229,7 +241,7 @@ dotenv.load_dotenv()
 def fail_error(msg):
     """Print a nice red error to the screen and then exit the script"""
     sys.stderr.write("\033[1;31m{:}\n".format(msg))
-    sys.exit(2)  
+    sys.exit(2)
 
 # Crash the script intentionally if the .env file doesn't contain a
 # database URL and key:
@@ -328,7 +340,7 @@ From here, if we open the `periodic-db` entry under the NOSQL API list, and then
 Yay! 👩‍🔬⚗️👨‍🔬🧪🧑‍🔬⚛️
 
 # 4. Querying the database
-Click the blue `Edit Filter` button and try entering a filter expression into the box, like:
+In the text box next to `SELECT * FROM c`, try entering a filter expression into the box like:
 
 ```sql
 WHERE c.Phase = "Gas"
