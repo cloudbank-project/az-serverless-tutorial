@@ -58,12 +58,12 @@ If you can't connect VSCode to your VM, check out these troubleshooting guides f
 
 # 2. Set up Azure Function Core Tools
 
-Azure provides us with an application called "Azure Function Core Tools" that we can install on our workstation VM (or personal computer) to test out our API code before actually publishing it. The core tools will let us invoke our Python code from a web browser, but using a private URL that _only_ browsers on our workstation  VM (or personal computer) can access.
+Azure provides us with an application called "Azure Function Core Tools" that we can install on our workstation VM (or personal computer) to test out our API code before actually publishing it. The core tools will let us invoke our Python code from a web browser, but using a private URL that _only_ browsers on our workstation VM (or personal computer) can access.
 
 To install Azure Function Core Tools, start by opening a new terminal in the remote VSCode window:
 ![](./img/vs-new-term.png)
 
-We'll start by installing the "Azure CLI," which provides some general useful commands in our terminal for interacting with AzureRun this command:
+We'll start by installing the "Azure CLI," which provides some useful commands in our terminal for interacting with Azure. Run this command:
 
 ```bash
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
@@ -145,7 +145,7 @@ This should let us see all the project files in the left sidebar:
 ![](./img/azfn-workspace.png)
 
 
-Now let's create a "venv" ("virtual environment") for the function to execute in. In a new terminal, run this command to create a new environment:
+Now let's create a Python "venv" to do our development in. In a new terminal
 
 ```bash
 python3 -m venv app-env
@@ -159,8 +159,7 @@ You should see the environment name appear before the regular stuff in the termi
 
 ![](./img/azfn-venv.png)
 
-In general, you'll only need to create the environment once, but you might need to "activate" it every time you open a new terminal. If you're not sure, look for that `(app-env)` text before the rest of the command prompt. If you don't see it, run that `activate` command above.
-
+As a reminder from our dance with "venvs" in the NoSQL tutorial, you'll only need to create the environment once, but you might need to "activate" it every time you open a new terminal. If you're not sure, look for that `(app-env)` text before the rest of the command prompt. If you don't see it, run that `activate` command above.
 
 ## Looking around
 
@@ -222,6 +221,10 @@ From this dashboard, click `+ Create`:
 
 ![](./img/portal-fn-create.png)
 
+We'll be presented with several different "hosting plans," which trade off things like how many people can be accessing our data at once and how fast those interactions happen. Our API is going to be tragically unpopular, so let's select the cheapest option, `Consumption` (1), and then continue with the `Select` button (2):
+
+![](./img/azfn-plans.png)
+
 On the wizard page select the following options:
 - **Subscription**: Your course staff should announce to you what subscription to use. If you're not sure, ask them.
 - **Resource group**: Choose the resource group that contains your UW NetID in its name
@@ -255,9 +258,20 @@ In VSCode terminal, log in by running this command and following the instruction
 ```bash
 az login
 ```
+You may be asked to select the subscription you want to log into. Type the number in the list that corresponds to the Azure subscription your course staff tell you to use:
 
-When it finishes, you should see some garbage spat out to the terminal including your UW NetID:
+![](./azfn-cli-login-select.png)
+
+When it finishes, try running this command:
+
+```bash
+az account show
+```
+
+If you've successfully logged in, you should see some garbage spat out to the terminal including your UW NetID:
 ![](./img/azfn-cli-login.png)
+
+If you _don't_ see the above, contact your course staff and make sure you can log in through the CLI before proceeding.
 
 Now, publish your code by running the following command, where the blank `________` is replaced with the name of the function app you created in the web portal:
 
@@ -307,15 +321,15 @@ Your friends should be able to as well. Ask them to try it out!
 
 # 4. Reading from the database
 
-## New code 
+## New code
 
 Now we'll add another function to our API that allows users to perform element lookups from our NoSQL database.
 
 First, let's open up `requirements.txt` which, as in the NoSQL tutorial, lists the packages required for our code to run. Add the following two lines to the bottom, and save the file:
 
 ```python
-azure-core==1.26.4
-azure-cosmos==4.3.1
+azure-core
+azure-cosmos
 ```
 
 In the terminal, make sure we're in the `db-api` folder and that our virtual environment is activated. Then, run the following command:
@@ -378,7 +392,7 @@ def lookup(req: func.HttpRequest) -> func.HttpResponse:
             pass
         else:
             element = req_body.get('name')
-            
+
     if element:
         # An element name was provided!
 
@@ -386,7 +400,7 @@ def lookup(req: func.HttpRequest) -> func.HttpResponse:
         client = cosmos_client.CosmosClient(HOST, {'masterKey': MASTER_KEY})
         db = client.get_database_client(DATABASE_ID)
         container = db.get_container_client(CONTAINER_ID)
-        
+
         # Do a database query that fetches all database entries
         # with the provided element name. In theory, this should
         # only be one element, but in general SQL queries can
@@ -439,7 +453,7 @@ Where the blank `______` is replaced with the proper begnning of your function a
 
 But we're not ready to test it just yet. We need to give our code the secret access keys to the database.
 
-## Access credentials 
+## Access credentials
 
 Open up `local.settings.json`, which should look something like this:
 
@@ -507,7 +521,7 @@ When you're done, hit the blue `Apply` button at the bottom (or the `Save` butto
 
 ![](./img/azfn-browser-cloud-elem.png)
 
-That means it all works! You've build an API that stores information in a database and retrieves it through a public web API. Congratulations!
+That means it all works! You've built an API that stores information in a database and retrieves it through a public web API. Congratulations!
 
 {{% aside %}}
 
