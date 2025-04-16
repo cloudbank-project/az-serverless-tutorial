@@ -5,7 +5,7 @@ title: "Setting up a VM as your remote workstation"
 
 # 0. Introduction
 
-In this guide we set up a virtual machine (VM) in the Azure cloud. We use VSCode Server to log in; and from that point
+This guide sets up a virtual machine (VM) in the Azure cloud. We use VSCode Server to log in; and from that point
 we can write and run code remotely. You use this *remote workstation* through the remaining cloud tutorials. 
 
 In theory you could do this on your local computer, *without* the remote workstation, but doing things this way offers us a few advantages:
