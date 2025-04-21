@@ -400,3 +400,77 @@ From here, you can select a new machine size and click the blue `Resize` button 
 Once you've resized the VM, go back to the main dashboard page and click `Start` to turn the machine on again:
 
 ![](./img/vm-off.png)
+
+
+## Appendix: Stretch activities
+
+
+### Using `requests`
+
+
+These two lines of Python "ping" a website: 
+
+
+```
+import requests
+print(requests.get('https://pythonbytes.azurewebsites.net/api/Gargutron').text)
+```
+
+It is possible to add to the URL given above based on feedback; which becomes a little puzzle game.
+
+
+### Using a github repo for reproducible ocean science
+
+
+The following command sequence has not been carefully vetted by the MSE543 team. This information
+is provided as "experimental" only. The commands are run on the Azure VM to install the jupyter 
+notebook server.
+
+
+```
+sudo apt update -y
+sudo apt upgrade -y
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm ~/miniconda3/miniconda.sh
+export PATH=~/miniconda3/bin:$PATH
+conda init
+exit
+```
+
+
+(start a new terminal)
+
+
+```
+git clone https://github.com/robfatland/oceanclient
+conda create --name testenv
+conda activate testenv
+conda install jupyter
+conda install pandas -y
+conda install numpy -y
+conda install matplotlib -y
+(jupyter lab --no-browser --port=8889) &
+```
+
+
+The final command `jupyter etcetera` will produce a lot of text output. Locate the token string
+found by inspection; look for "token=a43832bef989...etcetera very long...6487dea849f".
+Once this command has gotten rolling VSCode Server should prompt you with something like
+"Open in browser?" Click on **Yes** and paste in the token value "a438...etcetera". 
+If everything goes well a Jupyter notebook environment appears in your browser. You
+can navigate to the `oceanclient` folder and run the first Python cell in the `sensors.ipynb` notebook.
+
+
+What is happening here: 
+
+- We have pre-built a NoSQL database with some ocean profile data on Azure
+- We have set up a couple of serverless functions that can query this data
+- We have built the `oceanclient` repo that knows how to interact with the above machinery
+- When you run the two lines of code...
+    - ...the first line runs the adjacent module file `oceanclient.py`...
+    - ...this defines a function called `Chart()`...
+    - ...so the second line of code runs `Chart()` selecting one of 45 available datasets
+    - ...and this produces a visual representation of the data...
+    - ...and also returns the data values as two `pandas` dataframes (`dfS` and `dfT`)
