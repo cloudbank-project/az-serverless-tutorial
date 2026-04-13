@@ -47,16 +47,16 @@ On this page, configure these options as such:
 - **Subscription**: Your course staff should announce to you what subscription to use. If you're not sure, ask them.
 - **Resource group**: Choose the pre-existing resource group that contains your UW NetID in the name. It will look something like `rg-amlclass-[YOUR UW NETID]`.
 - **Virtual machine name**: Name the machine `[YOUR UW NETID]-workstation`, replacing `[YOUR UW NETID]` with your net ID
-- **Region**: This setting determines where (geographically) in the world our machine will be placed. It doesn't ultimately matter for us, but wherever possible try to create all of your cloud resources in one region. This keeps communication between them faster, more reliable, and in some cases cheaper.
+- **Region**: Select `(US) West US 3`. This setting determines where (geographically) in the world our machine will be placed. This keeps communication between them faster, more reliable, and in some cases cheaper.
 - **Availability options**: Choose `No infrastructure redundancy required`. Redundancy options allow us to reserve "backup" VMs in case the primary one becomes unavailable. For our purposes, this isn't necessary (and can make it harder to create the VM), so we opt out of it.
-- **Image**: Leave as default ***Ubuntu Server 24.04 LTS - x64 Gen2*** This is a distribution of the Linux operating system to be installed on our VM.
+- **Image**: Select ***Ubuntu Server 24.04 LTS - x64 Gen2***. This is a distribution of the Linux operating system to be installed on our VM.
 - **Size**: This setting controls how powerful the virtual machine is. The default setting, while good for data science, is likely way too over-powered for what we'll be using it for here. We can choose something much cheaper (around $8/month, instead of around $70/month). Click `See all sizes`:
 
 ![](./img/vm-size-1.png)
 
-From the size screen, type `b1s` (1) into the search box and select the `B1s` machine type from the search results below (2). Finally, click `Select` at the bottom of the page (3):
+From the size screen, type `B2ats` into the search box and click the `B2ats_v2` machine type from the search results below. Finally, click `Select` at the bottom of the page:
 
-![](./img/vm-size-2.png)
+![](./img/vm_config_2.png)
 
 {{%aside%}}
 **🙀Note!🙀**
@@ -98,10 +98,7 @@ If VM creation fails, you'll see a red X instead of a green checkmark and no `Go
 ![](./img/vm-goto-resource.png)
 
 
-From this page we can turn the machine off/on, and view details like its public IP address (the name we use to find it on the internet). You can also get back to this dashboard page from the main Virtual Machines dashboard, which we navigated to at the beginning of this tutorial:
-
-![](./img/vm-summary.png)
-
+From this page we can turn the machine off/on, and view details like its public IP address (the name we use to find it on the internet). You can also get back to this dashboard page from the main Virtual Machines dashboard, which we navigated to at the beginning of this tutorial.
 <a id="record-public-ip"></a>
 At this point, your VM is ready to connect to with VSCode. Note down the **Public IP address** on the right side of the dashboard. It takes the form of four numbers separated by dots, like `__.__.__.__`. You'll need it in the next steps:
 
@@ -133,17 +130,23 @@ VSCode will ask where to save the settings you just configured. Choose the first
 
 ![](./img/vscode-rc-ssh-config.png)
 
-Now we have to tell VSCode to use <a href="#download-pem-file" target="_blank">that key file we downloaded</a>. Start by using the `File` menu to `Open Folder`:
+Now we have to tell VSCode to use <a href="#download-pem-file" target="_blank">that key.pem file we downloaded</a>. Start by using the `File` menu to `Open Folder`. Navigate to and select the folder where the downloaded key.PEM file is at (likely your Downloads folder, you can move the file to other folder if you would like to).
 
 ![](./img/vscode-open-folder.png)
 
-In the dialog box that opens, navigate to and select the folder you downloaded that PEM file into (likely your Downloads folder). You may be asked if you trust the authors of the files in this folder. Check the box `Trust the authors of all files in the parent folder`, and then click the `Yes` button:
+You may be asked if you trust the authors of the files in this folder (if not, ignore this). Check the box `Trust the authors of all files in the parent folder`, and then click the `Yes` button :
 
 ![](./img/vscode-folder-trust.png)
 
 You should now be able to see the PEM file by opening the browser pane on the left (1). Right-click that file (2) and select Copy Path (3):
 
 ![](./img/vscode-copy-path.png)
+
+Open your `terminal` within the VScode by:
+
+![](./img/vscode-rc-term.png)
+
+In terminal, type `chmod 600 PATH_TO_THE_key.pem_FILE`. Replace PATH_TO_THE_key.pem_FILE with the path you just copied. Press `Enter` to commit. This will change the security permission level of the key.pem file.
 
 Now, open up the remote machines list by clicking the little screen icon on the left side of VSCode (circled and labelled (1) below). Then, move your mouse over the SSH list and click the little gear icon (circled and labelled (2) below):
 
@@ -160,7 +163,7 @@ We need to add a line of the form:
   IdentityFile "______________________"
 ```
 
-Where the blank `________` is replaced with the path of the PEM file that you just copied to the clipboard. Note that the line **begins with two spaces**, so that it is "indented" to the same level as the other surrounding lines in the config file. Also note the double quotes `"` around the path you fill in. An example is shown below, highlighted in the red box:
+Where the blank `________` is replaced with the path of the PEM file that you just copied to the clipboard. Note that the line of `IdentityFile "______________________"` **begins with two spaces**, so that it is indented to the same level as the other two lines (HostName and User) in the config file. Also note the double quotes `"` around the path you fill in. An example is shown below, highlighted in the red box:
 
 ![](./img/vscode-rc-ssh-config-key.png)
 
@@ -184,12 +187,11 @@ And then select your VM's IP address:
 ![](./img/vscode-rc-working-ip.png)
 
 
-A new window will oppen immediately. The first time you do this, you may be asked if you want to continue after being presented wtih a "fingerprint" value. Confirm you do by selecting the `Continute` option:
+You will see `Press Enter to confirm ....` from the dialog box at the top of the VS code. In the dialog box, type in `yes` and press `Enter` to confirm. This is essential for the authenticity of virtual machine you just created at your local server.
 
-![](./img/vscode-rc-known-host.png)
+![](./img/vm_config_4.png)
 
 After a few moments, if all is successful, you'll see `SSH: __.__.__.__` in the corner of the window, where `__.__.__.__` is the VM's IP.
-
 
 
 ![](./img/vscode-rc-success.png)
@@ -213,7 +215,8 @@ Leave the text in the file box unmodified and click 'Ok':
 
 ![](./img/vscode-open-folder-2.png)
 
-The first time you do this, you'll be asked if you trust the authors of the files in this folder. Check the box `Trust the authors of all files in the parent folder`, and then click the `Yes` button:
+The first time you do this, you'll be asked if you trust the authors of the files in this folder. Click `Trust Folder & Continue`.
+Then, the second window will pop up. Check the box `Trust the authors of all files in the parent folder`, and then click the `Yes` button:
 
 ![](./img/vscode-folder-trust.png)
 
