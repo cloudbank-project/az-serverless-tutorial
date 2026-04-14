@@ -13,7 +13,7 @@ For the sake of some familiarity with GitHub: Here is a sketch of how this Lab i
 It is written up in a GitHub repository in three **sections**. These are divided into `content` sub-folders
 each containing a markdown composition file called `_index.md`. We attach a *static site generator* called 
 Hugo to this repository; so that when we create and edit content and then push that back to GitHub, a 
-GitHub Action triggers that regenerates the Labs in the static website.
+GitHub Action triggers that regenerates the Labs in the static website. Which is (probably) what you are reading.
 
 
 The three sections in question are three of the four labs: **Workstation**, **NoSQL** and **Serverless**.
