@@ -279,8 +279,10 @@ A primary procedure and a side quest if you have time and inclination.
 ## 5.1 Primary procedure
 
 
-In VS Code Server you may already have an open terminal. The prompt will include the name of your VM, as in `azureuser@<yournetid>-workstation`. 
-If you do not see this remote terminal: Open it with the `Terminal` menu selecting `New Terminal`.
+In VS Code Server you may already have an open terminal. The command prompt is some sort of info-string that 
+will include the name of your VM, as in `azureuser@<yournetid>-workstation :~$`. If you do not see this 
+terminal: Open it with the `Terminal` menu selecting `New Terminal`. If the prompt is incorrect: Debug
+the situation before trying to move on.
 
 
 ![](./img/vscode-rc-term.png)
@@ -366,7 +368,11 @@ bash Miniconda3-latest-Linux-x86_64.sh
 ```
 
 Log out of your terminal and start a new terminal. This will refresh the environment: It activates the `miniconda` 
-Python environment that you just installed. Then (back in the terminal) run: 
+Python environment that you just installed. This probably pre-pends `(base)` to your terminal prompt. That is 
+`miniconda` telling you that your Python environment is just the `base` default.
+
+
+Now (back in the terminal) run: 
 
 
 ```bash
