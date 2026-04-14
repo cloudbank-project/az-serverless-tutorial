@@ -5,18 +5,56 @@ title: "Setting up a VM as your remote workstation"
 
 # 0. Introduction
 
-This guide sets up a virtual machine (VM) in the Azure cloud. We use VSCode Server to log in; and from that point
-we can write and run code remotely. You use this *remote workstation* through the remaining cloud tutorials. 
 
-You could do this on your laptop *without* the remote workstation, but doing things this way offers advantages:
+# 0.0 Lab production context
 
-- Everyone in this class will be using the same type of virtual machine, so if you run into any problems your classmates (and course staff) will be more able to help you debug them. It doesn't matter if you're on a Windows PC, an old Mac, or a new Mac. The commands all run on the remote machine, not your laptop.
 
-- You can access your workstation from any computer with VSCode, which is invaluable if, say, you're travelling and lose your computer. Everything is still in the cloud.
+For the sake of some familiarity with GitHub: Here is a sketch of how this Lab is put together.
+It is written up in a GitHub repository in three **sections**. These are divided into `content` sub-folders
+each containing a markdown composition file called `_index.md`. We attach a *static site generator* called 
+Hugo to this repository; so that when we create and edit content and then push that back to GitHub, a 
+GitHub Action triggers that regenerates the Labs in the static website.
 
-- If you make mistakes and the workstation becomes irreperably screwed up, you can always just delete it and make a new one without affecting all of your laptop's personal files.
 
-This guide assumes that you have [VSCode](https://code.visualstudio.com/) installed on your computer and a UW NetID you can use to log in to Azure. If you don't have VSCode yet, go ahead and install it now.
+The three sections in question are three of the four labs: **Workstation**, **NoSQL** and **Serverless**.
+The fourth lab is contained in a separate repository. 
+
+
+- **Workstation** (this Lab) concerns setting up a Virtual Machine (VM) on the Azure cloud
+- **NoSQL** concerns a type of database
+- **Serverless** is a Lab about using a cloud service to simplify building web applications
+
+
+## 0.1 Intro to the **Workstation** Lab
+
+
+In this Lab you will set up a virtual machine (VM) in the Azure cloud. We use VSCode Server to log in; and 
+from that point we can write and run code remotely. You will use this *remote workstation* in other Labs in
+this four-part cloud tutorials. 
+
+You could do much of this work on your own laptop *without* the remote workstation, but the remote approach has some advantages:
+
+
+- Everyone in the class will be using the same type of virtual machine, so if you run into any problems your
+classmates (and course staff) will be more able to help you debug. It doesn't matter if you're on a Windows
+PC, an old Mac, a new Mac or a Raspberry Pi: The commands all run on the remote machine, not your laptop.
+
+- You can access your workstation from any computer running VSCode (provided you have set up your authentication
+credentials). As everything is in the cloud: You won't lose your work there if your laptop and home desktop are
+both run over by a bulldozer.
+
+- You can **Delete** your cloud workstation and start over if it becomes irretrievably messed up. Of course this
+means losing your work on the cloud... and this is why periodically backing up your code to a separate location (like GitHub)
+is also recommended.
+
+- When your code is up and running and ready to do some data analysis: You might find that your laptop or desktop is not
+powerful enough. On the cloud you can relocate your entire User space to a different cloud machine that is much more
+powerful. This is just the starting point of taking advantage of *compute scale* on the cloud.
+
+
+This Lab assumes that you have [VSCode](https://code.visualstudio.com/) installed on your computer and a UW NetID 
+you can use to log in to Azure.
+
 
 # 1. Open the Azure portal
 
