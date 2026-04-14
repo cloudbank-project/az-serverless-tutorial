@@ -395,12 +395,12 @@ plt.title('Chart of Clouds per Hour')
 ```
 
 
-With the cell still selected hit <shift> + <enter> to run it. You will be prompted to select a kernel; 
+With the cell still selected hit shift + enter to run it. You will be prompted to select a kernel; 
 which is what you just installed with `miniconda`. So select `Python Environments...` and then select
 the recommended `base (python 3.whatever) miniconda` environment. With that done the cell should run
-and display a little chart. That is the end of the side quest; although if you had a bunch of data
+and display a little chart. This is the end of the side quest; although if you had a bunch of data
 you wanted to look at... you would be well on your way. You just need to figure out how to get that
-data into the Virtual Machine.
+data into the Virtual Machine where your Python installation lives.
 
 
 
