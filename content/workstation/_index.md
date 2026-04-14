@@ -17,7 +17,7 @@ GitHub Action triggers that regenerates the Labs in the static website.
 
 
 The three sections in question are three of the four labs: **Workstation**, **NoSQL** and **Serverless**.
-The fourth lab is contained in a separate repository. 
+The fourth lab on **Containers** is from a separate repository. 
 
 
 - **Workstation** (this Lab) concerns setting up a Virtual Machine (VM) on the Azure cloud
