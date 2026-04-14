@@ -28,6 +28,11 @@ The fourth lab on **Containers** is from a separate repository.
 ## 0.1 Intro to the **Workstation** Lab
 
 
+> A note on forging ahead: Some Lab steps involve installing packages; and you are often asked
+> "Are you sure you want to go ahead?" in a number of different ways. You can assume it is ok to
+> forge ahead when prompted in this way: Type in `y` or `yes` or `continue` or whatever.
+
+
 In this Lab you will set up a virtual machine (VM) in the Azure cloud. We use VSCode Server to log in; and 
 from that point we can write and run code remotely. You will use this *remote workstation* in other Labs in
 this four-part cloud tutorials. 
@@ -264,35 +269,69 @@ And finally, after all of the above steps, you'll be able to see all of your rem
 
 At this point, all files you edit in this window, and all terminals you open, will inherently be stored and running on the remote machine (rather than your laptop). Congratulations, you are working in the cloud!
 
+
 # 5. Play around
 
-In your remote window, open a terminal by using the `Terminal` menu and selecting `New Terminal`:
+
+A primary procedure and a side quest if you have time and inclination.
+
+
+## 5.1 Primary procedure
+
+
+In VS Code Server you may already have an open terminal. The prompt will include the name of your VM, as in `azureuser@<yournetid>-workstation`. 
+If you do not see this remote terminal: Open it with the `Terminal` menu selecting `New Terminal`.
+
 
 ![](./img/vscode-rc-term.png)
 
-At the bottom of the window, a terminal will open up. We're going to install some software on the remote machine now using the tool `apt`. Run the following command to get `apt` to fetch the list of all the software available for it to download:
+
+In this terminal: Check that the `ls -al` command works. It should list a couple hidden directories such as `.ssh` and `.vscode-server`. 
+You should also see a file listed called `.bashrc`. These are examples of Linux machinery that we set up once and tend to forget about.
+
+
+We're going to install some software on this remote machine now using the built-in "advanced package tool" in Linux, aptly named `apt`. 
+Run the following command to get `apt` to update its package catalog:
+
 
 ```bash
 sudo apt update
 ```
 
+
+Now that the catalog is updated: Let's have `apt` go through and install updates:
+
+
+```bash
+sudo apt upgrade -y
+```
+
+
+This can take a minute. We use `-y` in the command to automatically approve of the course of installation actions.
+
+
 ![](./img/vscode-rc-term-2.png)
 
+
 Next, we'll install pip and venv with the following line:
+
 
 ```bash
 sudo apt install -y python3-pip python3-venv
 ```
 
-`Pip` is a tool used to install Python libraries, while `venv` is a tool to help install multiple versions of a python library at one time. We'll be using these tools in future tutorials.
+`Pip` is a Python-specific package tool used to install Python libraries. `venv` is a tool to help install multiple Python environments. 
+We'll be using these tools in future tutorials. And finally (except for the side-quest below), we install a very important tool 
+called `nyancat`, again using the terminal:
 
-And finally, we're going to install a very important tool called `nyancat`. To do so, run the following command:
 
 ```bash
-sudo apt-get install -y nyancat
+sudo apt install nyancat -y
 ```
 
-Now, you can launch the tool by running the following command:
+
+Now you can launch this new tool that you have just installed:
+
 
 ```bash
 nyancat
@@ -300,15 +339,74 @@ nyancat
 
 If all goes well, you should see this:
 
+
 ![](./img/vscode-rc-nyan.png)
+
 
 Congratulations! Good job! You're doing science now. You can exit `nyancat` by clicking inside the terminal and typing the key combination `Control + C`. 
 
+
+## 5.2 Jupyter Side Quest
+
+
+Decide if you have time for a side quest (15 minutes if all goes well): The goal will be to install the `miniconda` Python environment
+and view a Jupyter notebook in your VS Code Server environment on your VM. That is: You will be running Jupyter notebooks on the cloud 
+VM via an interactive notebook environment in your VS Code Server app: On your laptop. 
+
+
+For this side quest to work you will have to install the Jupyter extension on your VS Code application.  (Note this is *not* your
+VS Code ***Server*** application. It is the same VS Code application you used to connect to your VM (From the `><` symbol to 
+`Connect to Host...` and so on)). Supposing that Jupyter installed ok (it tends to install as a bundle of about 4 Jupyter 
+sub-extensions) you are ready to jump back to your VM terminal where you issue these commands:
+
+
+```bash
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+```
+
+Log out of your terminal and start a new terminal. This will refresh the environment: It activates the `miniconda` 
+Python environment that you just installed. Then (back in the terminal) run: 
+
+
+```bash
+conda install jupyter ipykernel matplotlib
+touch ~/test.ipynb
+```
+
+
+The touch command creates the IPython notebook file `test.ipynb`. It is empty but that is fine. On your VS Code Server
+application: Open your File Explorer (probably the upper icon on your Activity Bar at the far left). Select your home
+directory and you should see `test.ipynb` as one of the files. Double-click on `test.ipynb` and it should open as a
+blank Jupyter notebook. Click on the `+ Code` button to create a new code cell. Select this cell by clicking on it and
+then type in the following two lines of code: 
+
+
+```
+from matplotlib import pyplot as plt 
+plt.plot([1, 2, 3, 4, 0, -1, 6, 8, 13, 9, 8])  
+plt.title('Chart of Clouds per Hour') 
+```
+
+
+With the cell still selected hit <shift> + <enter> to run it. You will be prompted to select a kernel; 
+which is what you just installed with `miniconda`. So select `Python Environments...` and then select
+the recommended `base (python 3.whatever) miniconda` environment. With that done the cell should run
+and display a little chart. That is the end of the side quest; although if you had a bunch of data
+you wanted to look at... you would be well on your way. You just need to figure out how to get that
+data into the Virtual Machine.
+
+
+
+
 # 6. Turning things off when you're done
+
 
 Although we've set up the machine to automatically power down at the end of the day, it's good practice to manually turn the machine off when you're done using it (the auto-off is really just there in case we forget).
 
+
 You can power the VM down by going to its dashboard on the Azure web portal and hitting the Stop button:
+
 
 ![](./img/vm-stop.png)
 
