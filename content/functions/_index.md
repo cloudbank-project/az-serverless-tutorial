@@ -232,7 +232,7 @@ On the wizard page select the following options:
 - **Runtime stack**: This is the programming language your function code is written in. Choose Python.
 - **Version**: This is the version of the programming language your code was written in. We can leave it as whatever default is selected.
 - **Region**: Choose the same region as you did for your [NoSQL database](../nosql).
-- **Instance size**: Choose 512 MB
+- **Instance size**: Choose 512 MB.
 ![](./img/portal-fn-wizard.png)
 
 Then, at the bottom, click the blue `Review + Create` button, and then on the confirmation page, the blue `Create` button.
