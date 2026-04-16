@@ -497,6 +497,27 @@ If connecting to your VM takes a long time and then fails with the message "The 
 
 ![](./img/vscode-rc-timeout.png)
 
+### Resizing the VM
+
+If your workstation keeps "freezing up" in the middle of your work (you can't run new terminal commands or save code files you're editing), the VM size may be too small. Thankfully, it's easier to make the VM bigger on the cloud.
+
+From the VM's dashboard on the web portal, turn the machine off by clicking the `Stop` button:
+
+![](./img/vm-stop.png)
+
+Within a minute or two, your machine should finish powering off. Once it has, select the `Size` option from the `Availability + scale` menu on the left:
+
+![](./img/vm-size-menu.png)
+
+From here, you can select a new machine size and click the blue `Resize` button at the bottom to make the change. We recommend trying out the size `B2as_v2`, which is still relatively inexpensive but big enough to do your work without freezes. *Be very careful* which size you select here, as selecting the wrong one could burn a lot of money very quickly. Try `B2as_v2`, and if that doesn't work, talk to your course staff.
+
+![](./img/vm-resize.png)
+
+Once you've resized the VM, go back to the main dashboard page and click `Start` to turn the machine on again:
+
+![](./img/vm-off.png)
+
+
 ### VM on/off
 
 Our guide has us set up VMs to automatically power off at the end of the day. It may be the case your machine has automatically turned off. Take a look at your VM's dashboard on Azure's web portal. If its status is not "Running", click the "Start" button to turn the machine on:
@@ -538,7 +559,7 @@ Within a minute or two, your machine should finish powering off. Once it has, se
 
 ![](./img/vm-size-menu.png)
 
-From here, you can select a new machine size and click the blue `Resize` button at the bottom to make the change. We recommend trying out the size `B2s`, which is still relatively inexpensive but big enough to do your work without freezes. *Be very careful* which size you select here, as selecting the wrong one could burn a lot of money very quickly. Try `B2s`, and if that doesn't work, talk to your course staff.
+From here, you can select a new machine size and click the blue `Resize` button at the bottom to make the change. We recommend trying out the size `B2as_v2`, which is still relatively inexpensive but big enough to do your work without freezes. *Be very careful* which size you select here, as selecting the wrong one could burn a lot of money very quickly. Try `B2as_v2`, and if that doesn't work, talk to your course staff.
 
 ![](./img/vm-resize.png)
 
