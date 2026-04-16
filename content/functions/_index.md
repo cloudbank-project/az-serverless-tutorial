@@ -223,7 +223,7 @@ From this dashboard, click `+ Create`:
 
 We'll be presented with several different "hosting plans," which trade off things like how many people can be accessing our data at once and how fast those interactions happen. Our API is going to be tragically unpopular, so let's select the cheapest option, `Consumption` (1), and then continue with the `Select` button (2):
 
-![](./img/azfn-plans.png)
+![](./img/azfn_plan_update.png)
 
 On the wizard page select the following options:
 - **Subscription**: Your course staff should announce to you what subscription to use. If you're not sure, ask them.
