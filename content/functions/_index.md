@@ -520,7 +520,7 @@ On this page, add two new variables named `ACCOUNT_HOST` and `ACCOUNT_KEY`. Give
 When you're done, hit the blue `Apply` button at the bottom (or the `Save` button at the top, whichever your web portal seems to have) and confirm that you want to restart the app to make changes. _Next_, go to your Function App’s Overview page in the Azure Portal and locate the Default domain value. Flex Consumption apps do not use the simple appname.azurewebsites.net format. Instead, Azure assigns a full hostname that includes a generated suffix and region, for example: appname-generated-id.region.azurewebsites.net. Copy the full hostname shown in the portal, then open the url `https://<your-default-domain>/api/lookup?name=Carbon`
 You should see similar output to when you tested earlier:
 
-![](./img/azfn-browser-cloud-elem.png)
+![](./img/azfn-browser-cloud-elem-update.png)
 
 That means it all works! You've built an API that stores information in a database and retrieves it through a public web API. Congratulations!
 
