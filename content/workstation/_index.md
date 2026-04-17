@@ -37,8 +37,8 @@ because your VM is just a little bit too small. Thankfully, on the cloud, it's e
 [resize the machine later](#resizing-the-vm). Just keep this option in mind as you do your work.
 
 
-On forging ahead: Some Lab steps involve installing packages; and you are often asked"Are you sure you 
-want to go ahead?" in a number of different ways. You can assume it is ok toforge ahead when prompted 
+On confirmation: Some Lab steps involve installing packages; and you are often asked "Are you sure you 
+want to go ahead?" in a number of different ways. You can assume it is ok to agree when prompted 
 in this way: Type in `y` or `yes` or `continue` or whatever.
 
 
