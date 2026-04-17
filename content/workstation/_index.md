@@ -27,15 +27,28 @@ The fourth lab on **Containers** is from a separate repository.
 
 ## 0.1 Intro to the **Workstation** Lab
 
-
-> A note on forging ahead: Some Lab steps involve installing packages; and you are often asked
-> "Are you sure you want to go ahead?" in a number of different ways. You can assume it is ok to
-> forge ahead when prompted in this way: Type in `y` or `yes` or `continue` or whatever.
+{{%aside%}}
+**🙀Notes!🙀**
 
 
-> A note on changes in the portal: We (especially the TAs) review the lab to help ensure the screen
-> captures are accurate. The interface changes over time so you may find some images in the Lab do
-> not match perfectly what you see in the browser. They should be similar enough for you to forge on.
+As you do your work in this Lab, you may find your terminals freeze up and you are unable to save files. 
+You may even see an error window pop up that says `Operation timed out`. If this happens, it might be 
+because your VM is just a little bit too small. Thankfully, on the cloud, it's easy to 
+[resize the machine later](#resizing-the-vm). Just keep this option in mind as you do your work.
+
+
+On forging ahead: Some Lab steps involve installing packages; and you are often asked"Are you sure you 
+want to go ahead?" in a number of different ways. You can assume it is ok toforge ahead when prompted 
+in this way: Type in `y` or `yes` or `continue` or whatever.
+
+
+On changes in the portal: We (especially the TAs) review the lab to help ensure the screen
+captures are accurate. The interface changes over time so you may find some images in the Lab do
+not match perfectly what you see in the browser. They should be similar enough for you to forge on.
+
+{{%/aside%}}
+
+
 
 
 In this Lab you will set up a virtual machine (VM) in the Azure cloud. We use VSCode Server to log in
@@ -130,7 +143,10 @@ From the size screen, type `B2ats` into the search box and click the `B2ats_v2` 
 **🙀Note!🙀**
 
 
-As you do your work in this lab, you may find your terminals freeze up and you are unable to save files. You may even see an error window pop up that says `Operation timed out`. If this happens, it might be because your VM is just a little bit too small. Thankfully, on the cloud, it's easy to [resize the machine later](#resizing-the-vm). Just keep this option in mind as you do your work.
+Reiterating: As you do your work in this lab, you may find your terminals freeze up and you are unable to save files. 
+You may even see an error window pop up that says `Operation timed out`. If this happens, it might be because your 
+VM is just a little bit too small. Thankfully, on the cloud, it's easy to [resize the machine later](#resizing-the-vm). 
+Just keep this option in mind as you do your work.
 
 
 {{%/aside%}}
