@@ -122,6 +122,8 @@ When you're done, click `Next: Global Distribution >` at the bottom.
 
 
 On this page, choose the following options:
+
+
 - **Geo-Redundancy**: Disable. This option requests that Azure backs our data up in different physical locations around the world. Though good practice for important data, our exercise today isn't that important ;) .
 - **Multi-region Writes**: Disable
 
@@ -179,10 +181,15 @@ Let's put some stuff in it!
 # 3. Populate the database
 
 
-Here's our strategy: we're going to download a collection of chemical element data in [CSV format](https://en.wikipedia.org/wiki/Comma-separated_values) (comma-separated values). We'll write a Python script to load this CSV file, and then insert its data into our cloud database.
+Here's our strategy: We're going to download a free/open resource file: A collection of chemical 
+element data in [CSV format](https://en.wikipedia.org/wiki/Comma-separated_values) (CSV = comma-separated 
+values). We write a Python script to get a local copy of this CSV file; and then insert that data 
+into our cloud database. When using Python we will take a moment to create a contextual *environment*
+using the built-in Python `venv` module. 
 
 
-To get started, head back to your remote VSCode window. Create a new terminal using the `Terminal -> New Terminal` menu option:
+To get started, head back to your remote VSCode window. If there is not already a terminal available:
+Create a new terminal using the `Terminal -> New Terminal` menu option:
 
 
 ![](./img/vm-rc-term.png)
@@ -204,13 +211,12 @@ cd db-populate
 ```
 
 
-Next, we'll create a "virtual environment" ("venv") in this directory, inside of which we can install the various
-
-
 ## Getting the data
 
 
-Now let's download the [periodic table data](https://gist.github.com/speters33w/e5b1246d6859f29c4f02a299714d4c20) using the `wget` command, which is a terminal command that downloads files the same way your web browser might. The general form of this command is:
+Now let's download the [periodic table data](https://gist.github.com/speters33w/e5b1246d6859f29c4f02a299714d4c20) 
+using the `wget` command. This is a terminal command that downloads files in the manner of your web browser. 
+The format of the `wget` command is:
 
 
 ```bash
@@ -218,10 +224,10 @@ wget [URL OF FILE TO DOWNLOAD] -O [NAME TO SAVE THE FILE AS]
 ```
 
 
-(note that's a capital `-O`)
+(note `-O` is a capital letter oh)
 
 
-For our periodic table data, use these options:
+For our periodic table data, use these arguments for DOWNLOAD URL and FILE NAME:
 
 
 - **URL**:
@@ -240,20 +246,29 @@ periodic-table.csv
 ```
 
 
-Now if we open the `periodic-table.csv` file from the files bar on the left, we should see a bunch of raw elemental data:
+When we open the `periodic-table.csv` file from the files bar on the left: We should see a bunch of element data...
+
+
 ![](./img/vm-csv.png)
 
 
 Let's load it into our database!
 
 
-## Installing Python requirements
+## Installing Python modules
 
 
-First, let's create a Python virtual environment ("venv") inside of which we'll install the various Python libraries we'll be using.
+As noted we now create a Python virtual environment ("venv") as a localized context for our database work. We
+will then jump into this environment to install the various Python libraries we need. This environment
+business is an organizational practice: If we have multiple projects to work on, setting up each project
+with its own respective environment helps avoid a "kitchen sink" approach where we have a global 
+environment with lots and lots of libraries installed. Not too surprising: The kitchen sink approach 
+can lead to library mutual incompatibilities or work; which means time lost to debug. Avoiding this by
+setting up specialized environments can be seen as an example of compartmentalization of resources. This
+is considered to be a best practice in research software engineering. 
 
 
-Start by running this command to create it:
+Start by running this command to create a new environment:
 
 
 ```bash
