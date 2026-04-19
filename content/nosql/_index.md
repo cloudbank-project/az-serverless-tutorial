@@ -11,16 +11,76 @@ public access to this database. This access happens without needing Azure accoun
 toy model of creating an open data resource that you might share with other researchers.
 
 
-We will build a NoSQL database (pronounced "no-sequel") on top of Azure's "Cosmos DB" service. 
+## 0.1 Concept of operations and authentication 
+
+
+Conceptually we have two bases of operation in the Azure cloud: The Azure portal and the Azure VM that we started 
+up in the first Lab. Both of these appear to us via our laptop: The portal is seen in a web browser; and the VM
+is seen via VS Code Server which functions as our development environment. VS Code Server is communicating with the
+Azure VM via `ssh` (secure shell) traffic on port 22 of the VM. So both the VM and the NoSQL database that we will
+build below exist *in the Azure cloud*. 
+
+
+Underlying this construction process (building cyberinfrastructure) is the notion of authentication. In
+the case of the Azure VM the authentication is by means of a keypair `.pem` file. This is pointed to by the `config` 
+file **Host** entry seen in VS Code running on our laptop. The Host entry also has the ip address of the VM and
+the Username `azureuser`; so this is all the information needed to connect to and authenticate on the Azure VM. 
+In VS Code: Clicking the lower left `><` symbol initiates the startup of VS Code Server connected
+to this Azure VM. VS Code Server looks like VS Code; but it runs on the cloud machine.
+
+
+If we build a cloud database: It will also require authentication. Authentication to access the NoSQL 
+database from the Azure portal is by means of logging in to the portal with our NetID. That is sufficient.
+Authentication to access the database from the VM is also necessary. Just because the VM is on the Azure 
+cloud does not mean it can go messing around with the database. In the procedure below there is a step 
+where we get an access key from the database (using the portal) and place that key in a file on the VM
+(using VS Code Server). This key is then used by a Python program running on the VM to authenticate 
+access to the database. Specifically the Python program will write data into the database. 
+
+
+### 0.1.1 More than you wanted to know about security
+
+
+On VS Code Server we will run a Python script (on the Azure VM) that communicates with the database service 
+via a secure communication protocol called `HTTPS`. This is analogous to the secure shell (`ssh`) protocol 
+that we use on port 22. By convention `HTTPS` uses port 443. So the Azure VM is sending information packets
+out to the internet which are routed (as if by magic) back to the database service inside the Azure cloud, 
+specifically to port 443. We could just as easily run the code that talks to the database service from our 
+own laptop.
+
+
+If we were inclined to be more secure: There is a mechanism for creating a private endpoint for the 
+database service *internal* to Azure. This would still work with our Azure VM but we could turn off
+the public access point.
+
+
+## 0.2 Objective of this Lab
+
+
+We commence to build a NoSQL database (pronounced "no-sequel") service on top of Azure's "Cosmos DB" service. 
 A NoSQL database is great for storing freeform data that does not fit easily into tables with 
 rigidly defined rows and columns. To explore further, check out JavaScript Object Notation (JSON)
 document structure. Also worth noting: There are sub-categories of NoSQL. We will be using
-the *Document* type; and there are also *Dictionary*, *Family* and *Graph* flavors of NoSQL.
+the *Document* type of NoSQL. Each element in the table will become a self-contained (JSON) 
+document. There are also *Dictionary*, *Family* and *Graph* flavors of NoSQL as well.
+
+
+- **Document** NoSQL is self-contained JSON documents; has structural awareness / queryable fields
+- **Dictionary** flavor is simpler: key-value pairs with no hierarchical structure to the value
+- **Family** flavor suports complex data entities through flexible expansion of 'column' notion
+- **Graph** contains nodes and edges: Strong support for relationships within the data
 
 
 This guide assumes that you've completed the [VM Workstation tutorial](../workstation). 
-Using a remote VM is not required to do any of the things outlined in this tutorial, but 
-it _will_ make it easier for course staff to help you debug.
+Working from the Azure VM is not strictly speaking required. You could just as well do this
+procedure from your laptop, for example in Windows WSL. However sticking with the standardized
+Azure VM approach _will_ make it easier for course staff to help you debug if something goes
+amiss.
+
+
+Once the database is populated with elements from the periodic table we will use the portal
+interface to examine some query patterns: Which elements on the table are in gase phase at
+STP and so on. 
 
 
 # 1. Get your environment ready
