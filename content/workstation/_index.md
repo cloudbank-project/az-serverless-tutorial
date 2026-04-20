@@ -6,7 +6,10 @@ title: "Setting up a VM as your remote workstation"
 # 0. Introduction
 
 
-## 0.0 Lab production context
+## 0.0 Lab build
+
+
+[Link to Lab](https://cloudbank-project.github.io/az-serverless-tutorial/workstation/)
 
 
 For the sake of some familiarity with GitHub: Here is a sketch of how this Lab is put together.
