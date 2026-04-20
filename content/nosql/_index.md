@@ -3,7 +3,12 @@ draft: false
 title: "Creating a NoSQL database on Azure"
 ---
 
+
+# NoSQL
+
+
 # 0. Introduction
+
 
 In this tutorial we will set up a database (an 'empty container'). We then proceed to write records to this database, 
 specifically information about the periodic table of elements. In a subsequent tutorial, we'll build an API providing
