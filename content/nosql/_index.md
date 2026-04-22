@@ -164,7 +164,10 @@ From here, create a new database by clicking the `+ Create` button:
 ![](./img/az-cosmos-dash.png)
 
 
-Azure supports a number of different database technologies, all of which are provided with the brand name "Cosmos DB". Today, we'll be makind a NoSQL document store, which they call "Cosmos DB for NoSQL". Click the `Create` button under the `Cosmos DB for NoSQL` heading:
+Azure supports a number of different database technologies, all of which are provided 
+with the brand name "Cosmos DB". Today, we'll be making a NoSQL document store, which 
+they call "Cosmos DB for NoSQL". Click the `Create` button under the `Cosmos DB for NoSQL` 
+heading:
 
 
 ![](./img/az-create-nosql.png)
