@@ -10,7 +10,7 @@ title: "Creating a NoSQL database on Azure"
 # 0. Introduction
 
 
-In this tutorial we will set up a database (an 'empty container'). We then proceed to write records to this database, 
+In this tutorial we set up a database (an 'empty container'). We then proceed to write records to this database, 
 specifically information about the periodic table of elements. In a subsequent tutorial, we'll build an API providing
 public access to this database. This access happens without needing Azure account credentials. This is in effect a
 toy model of creating an open data resource that you might share with other researchers.
